@@ -1,0 +1,22 @@
+class IconPath {
+  static const String device = 'assets/images/icons8-device-48.png';
+  static const String reload = 'assets/images/icons8-available-updates-40.png';
+  static const String back = 'assets/images/icons8-back.gif';
+  static const String file = 'assets/images/icons8-file-48.png';
+  static const String folder = 'assets/images/icons8-folder-48.png';
+  static const String image = 'assets/images/icons8-image-48.png';
+  static const String pdf = 'assets/images/icons8-pdf-48.png';
+  static const String video = 'assets/images/icons8-video-file-48.png';
+  static const String zip = 'assets/images/icons8-zip-48.png';
+  static const String apk = 'assets/images/icons8-apk-64.png';
+  static const String unknown = 'assets/images/icons8-question-mark-64.png';
+  static const String setting = 'assets/images/icons8-setting-48.png';
+  static const String sort = 'assets/images/icons8-sort-48.png';
+  static const String zToA =
+      'assets/images/icons8-alphabetical-sorting-2-48.png';
+  static const String aToZ = 'assets/images/icons8-alphabetical-sorting-48.png';
+  static const String date = 'assets/images/icons8-date.gif';
+  static const String link = 'assets/images/icons8-link.gif';
+  static const String upload = 'assets/images/icons8-upload.gif';
+  static const String download = 'assets/images/icons8-download.gif';
+}

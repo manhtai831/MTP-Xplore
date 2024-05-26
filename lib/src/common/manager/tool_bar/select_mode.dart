@@ -1,0 +1,4 @@
+enum SelectMode {
+  viewDetail,
+  select,
+}
