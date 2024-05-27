@@ -14,8 +14,6 @@ class ToolBarManager {
   factory ToolBarManager() => _singleton;
 
   final StreamController<String> _controller = StreamController.broadcast();
-  final StreamController<SelectMode> selectController =
-      StreamController.broadcast();
   List<FileModel> filePicked = [];
 
   SortModel? sort = SortModel(id: 3);
@@ -36,8 +34,4 @@ class ToolBarManager {
     onReload();
   }
 
-  void setSelectMode(bool? isSelect) {
-    selectMode = isSelect == true ? SelectMode.select : SelectMode.viewDetail;
-    selectController.add(selectMode);
-  }
 }

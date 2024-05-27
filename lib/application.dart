@@ -87,15 +87,7 @@ class _ApplicationState extends State<Application> {
                       width: 32,
                     ),
                   ),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  StreamBuilder<SelectMode>(
-                    stream: ToolBarManager().selectController.stream,
-                    builder: (_, snapshot) => CupertinoSwitch(
-                        value: snapshot.data == SelectMode.select,
-                        onChanged: _onChangeMode),
-                  ),
+                 
                   const SizedBox(
                     width: 12,
                   ),
@@ -155,10 +147,6 @@ class _ApplicationState extends State<Application> {
     );
   }
 
-  void _onChangeMode(bool value) {
-    ToolBarManager().setSelectMode(value);
-  }
-
   Future<void> _onDownload() async {
     if (ToolBarManager().filePicked.isEmpty) {
       return;
@@ -176,7 +164,6 @@ class _ApplicationState extends State<Application> {
       await FileManager().pull(
           filePath: '${PathManager().toString()}/${it.name}', toPath: path);
     }
-    ToolBarManager().setSelectMode(false);
   }
 
   Future<void> _onUpload() async {

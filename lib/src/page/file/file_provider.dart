@@ -16,7 +16,6 @@ class FileProvider extends BaseProvider {
   List<FileModel> files = [];
   FilePageArgs? args;
   StreamSubscription<String>? _subscription;
-  StreamSubscription<SelectMode>? _subscriptionSelect;
   String? path;
   bool? isReload = false;
   @override
@@ -27,8 +26,6 @@ class FileProvider extends BaseProvider {
       isReload = true;
       getFiles();
     });
-    _subscriptionSelect =
-        ToolBarManager().selectController.stream.listen(_onChangeMode);
   }
 
   Future<void> getFiles() async {
@@ -56,7 +53,7 @@ class FileProvider extends BaseProvider {
       if (realList.length == 1) {
         final item = realList.elementAt(0);
         if (item.isLink) {
-          onPressed(item, 0);
+          onDoublePressed(item, 0);
         }
       }
     }
@@ -70,22 +67,37 @@ class FileProvider extends BaseProvider {
   }
 
   Future<void> onPressed(FileModel file, int index) async {
-    if (ToolBarManager().selectMode == SelectMode.select) {
-      bool isShiftPressed = HardwareKeyboard.instance.isShiftPressed;
-      if (isShiftPressed) {
-        int firstIndex =
-            files.indexOf(files.firstWhere((it) => it.isSelected == true));
-        for (int i = firstIndex; i <= index; i++) {
-          files[i].isSelected = true;
-        }
-      } else {
-        file.isSelected = !file.isSelected;
+    bool isShiftPressed = HardwareKeyboard.instance.isShiftPressed;
+    if (isShiftPressed) {
+      int firstIndex =
+          files.indexOf(files.firstWhere((it) => it.isSelected == true));
+      for (int i = firstIndex; i <= index; i++) {
+        files[i].isSelected = true;
       }
-      ToolBarManager().filePicked =
-          files.where((it) => it.isSelected == true).toList();
-      notify();
-      return;
+    } else {
+      file.isSelected = !file.isSelected;
     }
+    ToolBarManager().filePicked =
+        files.where((it) => it.isSelected == true).toList();
+    notify();
+    return;
+  }
+
+  @override
+  void destroy() {
+    _subscription?.cancel();
+    super.destroy();
+  }
+
+  void _onChangeMode(SelectMode event) {
+    for (var it in files) {
+      it.isSelected = false;
+    }
+    ToolBarManager().filePicked.clear();
+    notify();
+  }
+
+  Future<void> onDoublePressed(FileModel file, int index) async {
     if (file.isDir) {
       if (file.name == '.') {
         return;
@@ -112,20 +124,5 @@ class FileProvider extends BaseProvider {
         ),
       );
     }
-  }
-
-  @override
-  void destroy() {
-    _subscription?.cancel();
-    _subscriptionSelect?.cancel();
-    super.destroy();
-  }
-
-  void _onChangeMode(SelectMode event) {
-    for (var it in files) {
-      it.isSelected = false;
-    }
-    ToolBarManager().filePicked.clear();
-    notify();
   }
 }

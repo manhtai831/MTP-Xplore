@@ -30,7 +30,7 @@ class FileManager {
       {required String filePath, String? toPath}) async {
     toPath ??= (await getApplicationSupportDirectory()).path;
     final result = await ShellManager().runWithoutShell<String>(
-        'pull "${filePath.trim()}" "$toPath"',
+        'pull -p "${filePath.trim()}" "$toPath"',
         fromString: (p0) => '$toPath/${filePath.split('/').lastOrNull}');
     return result;
   }

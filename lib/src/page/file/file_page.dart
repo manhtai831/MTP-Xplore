@@ -40,6 +40,7 @@ class _FilePageState extends BaseState<FilePage, FileProvider> {
     return FileItem(
       file: file,
       onPressed: ()=> provider.onPressed(file,index),
+      onDoubleTap: ()=> provider.onDoublePressed(file,index),
     );
   }
 

@@ -21,7 +21,7 @@
 - [  ] Rename file
 - [  ] Make folder
 - [  ] Make folder
-- [  ] View multi tab
+- [  ] View multi tab, add new instance
 - [  ] Add short key
 - [  ] View file system 
 - [  ] Paste files/folder
@@ -51,4 +51,5 @@ Status | Command | Short Key
 [ ] | Select multiple forward | `Shift + left` or `Shift + up`
 [ ] | Select multiple backward | `Shift + right` or `Shift + down`
 [ ] | Select multiple  | `Command(⌘) + click` or `Shift + click`
+[ ] | New tab  | `Command(⌘) + T`
 

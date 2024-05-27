@@ -4,13 +4,16 @@ import 'package:device_explorer/src/model/file_model.dart';
 import 'package:flutter/material.dart';
 
 class FileItem extends StatelessWidget {
-  const FileItem({Key? key, this.file, this.onPressed}) : super(key: key);
+  const FileItem({super.key, this.file, this.onPressed, this.onDoubleTap});
   final FileModel? file;
   final VoidCallback? onPressed;
+  final VoidCallback? onDoubleTap;
+  
   @override
   Widget build(BuildContext context) {
     return BaseButton(
       onPressed: onPressed,
+      onDoubleTap: onDoubleTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
