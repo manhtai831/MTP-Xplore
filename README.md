@@ -1,16 +1,54 @@
-# device_explorer
+# Device X-plore
 
-A new Flutter project.
+- Flutter version: 3.22.1
+- Source code: Flutter
+- Core: ADB
 
-## Getting Started
+# Required System
+- Install ADB
 
-This project is a starting point for a Flutter application.
+# Feature
+- [ x ] Copy files/folder from host to adb
+- [ x ] Copy files/folder from adb to host
+- [ x ] Reload file list
+- [ x ] Sort by name
+- [ x ] Sort by type
+- [ x ] Sort by date
+- [ x ] Show image
+- [  ] View flat list
+- [  ] View grid 
+- [  ] Delete file
+- [  ] Rename file
+- [  ] Make folder
+- [  ] Make folder
+- [  ] View multi tab
+- [  ] Add short key
+- [  ] View file system 
+- [  ] Paste files/folder
+- [  ] Install apk
+- [  ] Navigate by keyboard
+- [  ] Select all
+- [  ] Select multiple item by short key
 
-A few resources to get you started if this is your first Flutter project:
+# Short Key
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Target short key:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Status | Command | Short Key
+---|--- | ---
+[ ] | Delete| `backspace`
+[ ] | New Folder | `Command(⌘) + N`
+[ ] | Copy | `Command(⌘) + C`
+[ ] | Paste | `Command(⌘) + V`
+[ ] | Select All | `Command(⌘) + A`
+[ ] | Refresh | `Command(⌘) + R`
+[ ] | Rename | `Command(⌘) + D`
+[ ] | Open | `Enter`
+[ ] | Navigate left | `left`
+[ ] | Navigate right | `right`
+[ ] | Navigate bottom | `down`
+[ ] | Navigate top | `up`
+[ ] | Select multiple forward | `Shift + left` or `Shift + up`
+[ ] | Select multiple backward | `Shift + right` or `Shift + down`
+[ ] | Select multiple  | `Command(⌘) + click` or `Shift + click`
+
