@@ -15,13 +15,12 @@
 - [ x ] Sort by type
 - [ x ] Sort by date
 - [ x ] Show image
-- [  ] View flat list
+- [ x ] View flat list
 - [  ] View grid 
-- [  ] Delete file
-- [  ] Rename file
+- [ x ] Delete file
+- [ x ] Rename file
 - [  ] Make folder
-- [  ] Make folder
-- [  ] View multi tab, add new instance
+- [ x ] View multi tab, add new instance
 - [  ] Add short key
 - [  ] View file system 
 - [  ] Paste files/folder

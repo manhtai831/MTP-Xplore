@@ -19,7 +19,7 @@ class DeviceItem extends StatelessWidget {
           children: [
             Image.asset(IconPath.device),
             BaseText.bold(
-              title: device?.device,
+              title: device?.model,
             )
           ],
         ),

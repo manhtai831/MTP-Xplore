@@ -19,4 +19,10 @@ class IconPath {
   static const String link = 'assets/images/icons8-link.gif';
   static const String upload = 'assets/images/icons8-upload.gif';
   static const String download = 'assets/images/icons8-download.gif';
+  static const String staticUpload = 'assets/images/icons8-upload-48.png';
+  static const String staticDownload = 'assets/images/icons8-download-48.png';
+  static const String deleteFile = 'assets/images/icons8-delete-file-32.png';
+  static const String editFile = 'assets/images/icons8-edit-file-48.png';
+  static const String home = 'assets/images/icons8-home-48.png';
+  static const String addFolder = 'assets/images/icons8-add-folder-48.png';
 }

@@ -68,13 +68,23 @@ class FileProvider extends BaseProvider {
 
   Future<void> onPressed(FileModel file, int index) async {
     bool isShiftPressed = HardwareKeyboard.instance.isShiftPressed;
+    final isMetaPressed = HardwareKeyboard.instance.isMetaPressed;
     if (isShiftPressed) {
       int firstIndex =
           files.indexOf(files.firstWhere((it) => it.isSelected == true));
-      for (int i = firstIndex; i <= index; i++) {
-        files[i].isSelected = true;
+      if (firstIndex < index) {
+        for (int i = firstIndex; i <= index; i++) {
+          files[i].isSelected = true;
+        }
+      } else {
+        for (int i = index; i <= firstIndex; i++) {
+          files[i].isSelected = true;
+        }
       }
+    } else if (isMetaPressed) {
+      file.isSelected = !file.isSelected;
     } else {
+      files.forEach((it) => it.isSelected = false);
       file.isSelected = !file.isSelected;
     }
     ToolBarManager().filePicked =
@@ -98,6 +108,9 @@ class FileProvider extends BaseProvider {
   }
 
   Future<void> onDoublePressed(FileModel file, int index) async {
+    ToolBarManager().filePicked.clear();
+    files.forEach((it) => it.isSelected = false);
+    notify();
     if (file.isDir) {
       if (file.name == '.') {
         return;

@@ -28,9 +28,8 @@ class _FileImageItemState extends State<FileImageItem> {
     if (result.error == null) {
       path = result.error;
     } else {
-      path = result.data;
+      path = result.data?.split(":").firstOrNull;
     }
-
     if (mounted) setState(() {});
   }
 
@@ -43,6 +42,8 @@ class _FileImageItemState extends State<FileImageItem> {
         color: Colors.red,
       );
     }
-    return Image.file(File(path!));
+    showLog('file://$path');
+    return InteractiveViewer(
+        maxScale: 10, minScale: .8, child: Image.file(File(path ?? '')));
   }
 }

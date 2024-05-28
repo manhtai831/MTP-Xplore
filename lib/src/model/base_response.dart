@@ -12,7 +12,7 @@ class BaseResponse<T> {
   BaseResponse.fromData(List<ProcessResult>? data,
       {FromString<T>? fromString}) {
     raw = data;
-    error = data?.errText;
+    error = data?.errLines.join(', ');
 
     if (data?.outLines != null) {
       this.data = fromString?.call(data!.outLines);

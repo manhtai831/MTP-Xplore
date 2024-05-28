@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:device_explorer/src/common/base/base_state.dart';
 import 'package:device_explorer/src/model/device_model.dart';
 import 'package:device_explorer/src/page/device/device_provider.dart';

@@ -1,23 +1,41 @@
 PODS:
+  - fl_webview (0.0.1):
+    - FlutterMacOS
+  - flutter_inline_webview_macos (0.0.1):
+    - FlutterMacOS
+  - flutter_macos_webview (0.0.4):
+    - FlutterMacOS
   - FlutterMacOS (1.0.0)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
 
 DEPENDENCIES:
+  - fl_webview (from `Flutter/ephemeral/.symlinks/plugins/fl_webview/macos`)
+  - flutter_inline_webview_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_inline_webview_macos/macos`)
+  - flutter_macos_webview (from `Flutter/ephemeral/.symlinks/plugins/flutter_macos_webview/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
 
 EXTERNAL SOURCES:
+  fl_webview:
+    :path: Flutter/ephemeral/.symlinks/plugins/fl_webview/macos
+  flutter_inline_webview_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_inline_webview_macos/macos
+  flutter_macos_webview:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_macos_webview/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
   path_provider_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
 
 SPEC CHECKSUMS:
+  fl_webview: 32d51430600c692cf8c3b500a0d8341585764922
+  flutter_inline_webview_macos: 9b18930061ac999316ed4838a20ef3cae57380f6
+  flutter_macos_webview: a17978522d9014b5ebc0279d76a332b9531c4a95
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
 
-PODFILE CHECKSUM: 236401fc2c932af29a9fcf0e97baeeb2d750d367
+PODFILE CHECKSUM: 8bcfe7e282318b2bae5e8867cb989f999eadc7dc
 
 COCOAPODS: 1.13.0
