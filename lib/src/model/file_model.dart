@@ -53,6 +53,7 @@ class FileModel {
   bool get isLink => permission?.startsWith('l') ?? false;
   bool get isFile => permission?.startsWith('-') ?? false;
   bool get isImage => ['jpg', 'png', 'jpeg', 'svg'].contains(ext);
+  bool get isVideo => ['mp4'].contains(ext);
 
   String? get linkTo {
     final splits = name?.split('->').lastOrNull?.split('/');
@@ -85,7 +86,7 @@ class FileModel {
         return IconPath.zip;
       } else if (isImage) {
         return IconPath.image;
-      } else if (['mp4'].contains(ext)) {
+      } else if (isVideo) {
         return IconPath.video;
       } else {
         return IconPath.file;

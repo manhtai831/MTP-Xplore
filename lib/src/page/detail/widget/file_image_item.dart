@@ -6,6 +6,7 @@ import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/shell/file_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 class FileImageItem extends StatefulWidget {
   const FileImageItem({super.key, this.file});
@@ -22,7 +23,13 @@ class _FileImageItemState extends State<FileImageItem> {
     init();
   }
 
-  init() async {
+  void init() async {
+    path =
+        '${(await getApplicationSupportDirectory()).path}/${widget.file?.name?.split('/').lastOrNull}';
+    if (File(path!).existsSync()) {
+      if (mounted) setState(() {});
+      return;
+    }
     final result = await FileManager()
         .pull(filePath: '${PathManager().toString()}/${widget.file?.name}');
     if (result.error == null) {
@@ -44,6 +51,6 @@ class _FileImageItemState extends State<FileImageItem> {
     }
     showLog('file://$path');
     return InteractiveViewer(
-        maxScale: 10, minScale: .8, child: Image.file(File(path ?? '')));
+        maxScale: 50, minScale: .8, child: Image.file(File(path ?? '')));
   }
 }

@@ -123,14 +123,15 @@ class FileProvider extends BaseProvider {
       PathManager().removeAll();
       PathManager().addMany(path ?? '');
     } else {
-      context.push(
+      int currentSelected = files.indexOf(file);
+      final result = await context.push(
         RoutePath.fileDetail,
-        args: FileDetailPageArgs(
-          files: [
-            file,
-          ],
-        ),
+        args: FileDetailPageArgs(files: files, initIndex: currentSelected),
       );
+      if (result == null) return;
+
+      files.elementAt(result).isSelected = true;
+      notify();
     }
   }
 }

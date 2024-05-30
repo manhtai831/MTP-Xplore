@@ -25,4 +25,6 @@ class IconPath {
   static const String editFile = 'assets/images/icons8-edit-file-48.png';
   static const String home = 'assets/images/icons8-home-48.png';
   static const String addFolder = 'assets/images/icons8-add-folder-48.png';
+  static const String storage = 'assets/images/icons8-storage-40.png';
+  static const String clear = 'assets/images/icons8-clear-48.png';
 }
