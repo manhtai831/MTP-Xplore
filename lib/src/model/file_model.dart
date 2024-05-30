@@ -54,6 +54,7 @@ class FileModel {
   bool get isFile => permission?.startsWith('-') ?? false;
   bool get isImage => ['jpg', 'png', 'jpeg', 'svg'].contains(ext);
   bool get isVideo => ['mp4'].contains(ext);
+  bool get isPdf => ['pdf'].contains(ext);
 
   String? get linkTo {
     final splits = name?.split('->').lastOrNull?.split('/');
@@ -78,7 +79,7 @@ class FileModel {
       return IconPath.link;
     }
     if (isFile) {
-      if (ext == 'pdf') {
+      if (isPdf) {
         return IconPath.pdf;
       } else if (ext == 'apk') {
         return IconPath.apk;

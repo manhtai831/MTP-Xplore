@@ -57,7 +57,7 @@ class FileManager {
       bool getResultPath = true}) async {
     toPath ??= (await getApplicationSupportDirectory()).path;
     final result = await ShellManager().runWithoutShell<String>(
-        'pull -p "${filePath.trim().ePath}" "$toPath"',
+        'pull -p "${filePath.trim()}" "$toPath"',
         fromString: (p0) => getResultPath
             ? '$toPath/${filePath.split('/').lastOrNull}'
             : p0.firstOrNull ?? '$toPath/${filePath.split('/').lastOrNull}');

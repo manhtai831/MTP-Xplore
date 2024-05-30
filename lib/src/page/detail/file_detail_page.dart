@@ -4,6 +4,7 @@ import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/page/detail/file_detail_provider.dart';
 import 'package:device_explorer/src/page/detail/widget/file_image_item.dart';
+import 'package:device_explorer/src/page/detail/widget/file_pdf_item.dart';
 import 'package:device_explorer/src/page/detail/widget/file_video_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -90,6 +91,11 @@ class _FileDetailPageState
     }
     if (item?.isVideo ?? false) {
       return FileVideoItem(
+        file: item,
+      );
+    }
+   if (item?.isPdf ?? false) {
+      return FilePdfItem(
         file: item,
       );
     }
