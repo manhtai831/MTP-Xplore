@@ -5,7 +5,7 @@ import 'package:device_explorer/src/model/device_model.dart';
 import 'package:flutter/material.dart';
 
 class DeviceItem extends StatelessWidget {
-  const DeviceItem({Key? key, this.device, this.onPressed}) : super(key: key);
+  const DeviceItem({super.key, this.device, this.onPressed});
   final DeviceModel? device;
   final VoidCallback? onPressed;
   @override

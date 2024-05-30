@@ -21,7 +21,7 @@ class FileItem extends StatelessWidget {
                 ? Theme.of(context).primaryColor.withOpacity(.3)
                 : null,
             border:
-                Border(bottom: BorderSide(width: .5, color: Colors.black12))),
+                const Border(bottom: BorderSide(width: .5, color: Colors.black12))),
         child: Row(
           children: [
             Image.asset(

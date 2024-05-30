@@ -4,8 +4,7 @@ import 'package:device_explorer/src/model/sort_model.dart';
 import 'package:flutter/material.dart';
 
 class SortItem extends StatelessWidget {
-  const SortItem({Key? key, this.sort, this.onChange, this.current})
-      : super(key: key);
+  const SortItem({super.key, this.sort, this.onChange, this.current});
   final SortModel? sort;
   final SortModel? current;
   final VoidCallback? onChange;

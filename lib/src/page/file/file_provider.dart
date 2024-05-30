@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:device_explorer/src/common/base/base_provider.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/manager/path/path_manager.dart';
-import 'package:device_explorer/src/common/manager/tool_bar/select_mode.dart';
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
 import 'package:device_explorer/src/common/route/route_path.dart';
 import 'package:device_explorer/src/model/file_model.dart';
@@ -84,7 +83,9 @@ class FileProvider extends BaseProvider {
     } else if (isMetaPressed) {
       file.isSelected = !file.isSelected;
     } else {
-      files.forEach((it) => it.isSelected = false);
+      for (var it in files) {
+        it.isSelected = false;
+      }
       file.isSelected = !file.isSelected;
     }
     ToolBarManager().filePicked =
@@ -99,17 +100,11 @@ class FileProvider extends BaseProvider {
     super.destroy();
   }
 
-  void _onChangeMode(SelectMode event) {
+  Future<void> onDoublePressed(FileModel file, int index) async {
+    ToolBarManager().filePicked.clear();
     for (var it in files) {
       it.isSelected = false;
     }
-    ToolBarManager().filePicked.clear();
-    notify();
-  }
-
-  Future<void> onDoublePressed(FileModel file, int index) async {
-    ToolBarManager().filePicked.clear();
-    files.forEach((it) => it.isSelected = false);
     notify();
     if (file.isDir) {
       if (file.name == '.') {

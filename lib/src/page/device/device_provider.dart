@@ -11,10 +11,13 @@ import 'package:device_explorer/src/shell/device_manager.dart';
 class DeviceProvider extends BaseProvider {
   List<DeviceModel> devices = [];
   StreamSubscription<String>? _subscription;
+  Timer? _timer;
+
   @override
   Future<void> init() async {
     _subscription = ToolBarManager().onListenOnReload(getDevices);
     getDevices();
+    _timer = Timer.periodic(const Duration(seconds: 10), (_) => getDevices());
   }
 
   Future<void> getDevices() async {
@@ -33,6 +36,7 @@ class DeviceProvider extends BaseProvider {
   @override
   void destroy() {
     _subscription?.cancel();
+    _timer?.cancel();
     super.destroy();
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:device_explorer/src/common/manager/tool_bar/select_mode.dart';
 import 'package:device_explorer/src/model/file_model.dart';

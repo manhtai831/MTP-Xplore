@@ -8,7 +8,7 @@ class PathManager {
   factory PathManager() => _singleton;
 
   List<String> paths = [];
-  StreamController<String> _controller = StreamController.broadcast();
+  final StreamController<String> _controller = StreamController.broadcast();
   Stream<String> get stream => _controller.stream;
 
   void add(String p) {

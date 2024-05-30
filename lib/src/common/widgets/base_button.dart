@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class BaseButton extends StatelessWidget {
   const BaseButton({
-    Key? key,
+    super.key,
     this.onPressed,
     this.child,
     this.onDoubleTap,
     this.borderRadius,
-  }) : super(key: key);
+  });
   final VoidCallback? onPressed;
   final VoidCallback? onDoubleTap;
   final Widget? child;

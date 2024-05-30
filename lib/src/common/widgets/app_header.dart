@@ -264,7 +264,7 @@ class _AppHeaderState extends State<AppHeader> {
   void _onAddFolder() {
     showDialog(
       context: Application.navigatorKey.currentContext!,
-      builder: (context) => CreateFolderDialog(),
+      builder: (context) => const CreateFolderDialog(),
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/manager/path/path_manager.dart';
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
