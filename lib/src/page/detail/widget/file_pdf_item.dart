@@ -52,6 +52,7 @@ class _FilePdfItemState extends State<FilePdfItem> {
     }
     return PdfViewer.openFile(
       path!,
+      params: const PdfViewerParams(),
     );
   }
 }

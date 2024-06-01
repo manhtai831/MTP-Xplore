@@ -250,6 +250,7 @@ class _AppHeaderState extends State<AppHeader> {
   }
 
   void _onGoHome() {
+    PathManager().removeAll();
     Application.navigatorKey.currentContext?.pop(util: RoutePath.devices);
   }
 

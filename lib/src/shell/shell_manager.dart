@@ -7,7 +7,8 @@ import 'package:device_explorer/src/model/base_response.dart';
 import 'package:device_explorer/src/shell/device_manager.dart';
 import 'package:process_run/shell.dart';
 
-String get adb =>   '${Platform.environment['HOME']}/Library/Android/sdk/platform-tools/adb';
+String get adb =>
+    '${Platform.environment['HOME']}/Library/Android/sdk/platform-tools/adb';
 
 class ShellManager {
   ShellManager._();
@@ -57,6 +58,7 @@ class ShellManager {
     String script, {
     FromString<T>? fromString,
   }) async {
+    _shell = Shell();
     final result = await _shell?.run(
       '$adb -s ${DeviceManager().current?.id} $script',
     );

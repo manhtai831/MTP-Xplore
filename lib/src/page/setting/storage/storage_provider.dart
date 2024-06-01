@@ -42,7 +42,16 @@ class StorageProvider extends BaseProvider {
             ));
     if (result != true) return;
     for (var it in files) {
-      File('$currentPath/${it.name}').deleteSync();
+      final file = File('$currentPath/${it.name}');
+      if (file.statSync().type == FileSystemEntityType.directory) {
+        final dir = Directory('$currentPath/${it.name}');
+        if (dir.existsSync()) {
+          dir.deleteSync(recursive: true);
+          continue;
+        }
+      }
+
+      file.deleteSync();
     }
     getCurrentSize();
   }
