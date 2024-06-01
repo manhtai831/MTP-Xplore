@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 
 class ItemSetting extends StatelessWidget {
   const ItemSetting({
-    Key? key,
+    super.key,
     this.title,
     this.icon,
     this.onPressed,
-  }) : super(key: key);
+  });
   final String? title;
   final String? icon;
   final VoidCallback? onPressed;
@@ -19,7 +19,7 @@ class ItemSetting extends StatelessWidget {
     return BaseButton(
       onPressed: onPressed,
       child: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration:
             const BoxDecoration(border: Border(bottom: BorderSide(width: .5))),
         child: Row(

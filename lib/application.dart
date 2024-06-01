@@ -1,7 +1,6 @@
 import 'package:device_explorer/src/common/base/settings_observer.dart';
 import 'package:device_explorer/src/common/route/route_path.dart';
 import 'package:device_explorer/src/common/widgets/app_header.dart';
-import 'package:device_explorer/src/model/setting_model.dart';
 import 'package:device_explorer/src/page/detail/file_detail_page.dart';
 import 'package:device_explorer/src/page/device/device_page.dart';
 import 'package:device_explorer/src/page/file/file_page.dart';

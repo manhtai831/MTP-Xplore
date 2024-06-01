@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
@@ -17,7 +16,6 @@ import 'package:device_explorer/src/page/dialog/sort/sort_dialog.dart';
 import 'package:device_explorer/src/shell/file_manager.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'app_back_button.dart' as app_back;
 

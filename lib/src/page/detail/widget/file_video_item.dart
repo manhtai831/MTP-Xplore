@@ -27,7 +27,7 @@ class _FileVideoItemState extends State<FileVideoItem> {
 
   void init() async {
     String? path = await getPath();
-    log('${DateTime.now()}  path: ${path}', name: 'VERBOSE');
+    log('${DateTime.now()}  path: $path', name: 'VERBOSE');
     if (path == null) return;
     final file = File(path);
     if (file.statSync().size == 0) {
@@ -73,23 +73,5 @@ class _FileVideoItemState extends State<FileVideoItem> {
     _chewieController?.videoPlayerController.dispose();
     _chewieController?.dispose();
     super.dispose();
-  }
-
-  void _onKeyEvent(KeyEvent value) {
-    log('${DateTime.now()}  value.logicalKey.keyLabel: ${value.logicalKey.keyId}',
-        name: 'VERBOSE');
-    if (value.logicalKey.keyLabel == 'Arrow Left') {
-      _chewieController?.pause();
-    }
-    if (value.logicalKey.keyLabel == 'Arrow Right') {
-      _chewieController?.pause();
-    }
-    if (value.logicalKey.keyId == 32) {
-      if (_chewieController?.isPlaying == true) {
-        _chewieController?.pause();
-      } else if (_chewieController?.isPlaying == false) {
-        _chewieController?.play();
-      }
-    }
   }
 }

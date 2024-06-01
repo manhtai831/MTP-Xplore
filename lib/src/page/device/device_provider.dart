@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:archive/archive_io.dart';
 import 'package:device_explorer/src/common/base/base_provider.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/manager/path/path_manager.dart';
@@ -9,8 +7,6 @@ import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dar
 import 'package:device_explorer/src/common/route/route_path.dart';
 import 'package:device_explorer/src/model/device_model.dart';
 import 'package:device_explorer/src/shell/device_manager.dart';
-import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 
 class DeviceProvider extends BaseProvider {
   List<DeviceModel> devices = [];
