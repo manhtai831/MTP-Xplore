@@ -1,3 +1,4 @@
+import 'dart:io';
 
 import 'package:device_explorer/src/model/base_response.dart';
 import 'package:device_explorer/src/model/device_model.dart';
@@ -13,14 +14,18 @@ class DeviceManager {
   DeviceModel? current;
 
   Future<BaseResponse<List<DeviceModel>>> getDevices() async {
-    final result = await ShellManager().run<List<DeviceModel>>(
-      '$adb devices -l',
+    final process = await Process.run(adb, [
+      'devices',
+      '-l',
+    ]);
+    return BaseResponse.fromProcess(
+      process,
       fromString: (t) => t
+          .split('\n')
           .skip(1)
           .where((it) => it.isNotEmpty)
           .map((it) => DeviceModel.fromString(it))
           .toList(),
     );
-    return result;
   }
 }

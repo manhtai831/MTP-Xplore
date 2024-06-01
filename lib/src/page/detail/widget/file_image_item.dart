@@ -31,9 +31,9 @@ class _FileImageItemState extends State<FileImageItem> {
       return;
     }
     final result = await FileManager()
-        .pull(filePath: '${PathManager().toString()}/${widget.file?.name}');
-    if (result.error == null) {
-      path = result.error;
+        .pull(filePath: '${PathManager().toString()}/${widget.file?.name}',fileInfo: widget.file);
+    if (!result.isOke()) {
+      path = result.raw;
     } else {
       path = result.data?.split(":").firstOrNull;
     }

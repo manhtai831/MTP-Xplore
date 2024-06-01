@@ -1,23 +1,60 @@
+import 'dart:developer';
 import 'dart:io';
 
-import 'package:process_run/shell.dart';
-
-typedef FromString<T> = T Function(Iterable<String>);
+typedef FromString<T> = T Function(String);
 
 class BaseResponse<T> {
-  List<ProcessResult>? raw;
-  String? error;
+  String? raw;
+  int? code;
   T? data;
 
-  BaseResponse.fromData(List<ProcessResult>? data,
-      {FromString<T>? fromString}) {
+  BaseResponse.success(
+    String? data, {
+    FromString<T>? fromString,
+  }) {
     raw = data;
-    error = data?.errLines.join(', ');
+    code = 0;
 
-    if (data?.outLines != null) {
-      this.data = fromString?.call(data!.outLines);
+    if (raw != null) {
+      this.data = fromString?.call(raw!);
     } else {
-      this.data = data?.outLines as T;
+      this.data = data as T?;
     }
   }
+
+  BaseResponse.error(
+    String? data, {
+    int? code,
+    FromString<T>? fromString,
+  }) {
+    raw = data;
+    code = code ?? 1;
+
+    if (raw != null) {
+      this.data = fromString?.call(raw!);
+    } else {
+      this.data = data as T?;
+    }
+  }
+  BaseResponse.fromProcess(
+    ProcessResult data, {
+    int? code,
+    FromString<T>? fromString,
+  }) {
+    if (data.stdout != null) {
+      raw = data.stdout;
+      code = 0;
+      if (raw != null) {
+        this.data = fromString?.call(raw!);
+      } else {
+        this.data = raw as T?;
+      }
+    } else if (data.stderr != null) {
+      raw = data.stderr;
+      code = code ?? 1;
+    }
+    // log('${DateTime.now()}  raw: \n$raw',name: 'VERBOSE');
+  }
+
+  bool isOke()=> code == 0;
 }

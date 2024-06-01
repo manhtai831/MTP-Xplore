@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:device_explorer/src/common/res/icon_path.dart';
 
 class FileModel {
@@ -107,6 +109,7 @@ class FileModel {
 
   FileModel.fromString(String s) {
     Iterable<String> splits = s.split(' ').where((it) => it.isNotEmpty);
+    if (splits.isEmpty) return;
     permission = splits.elementAt(0);
     childCount = int.tryParse(splits.elementAt(1));
     user = splits.elementAt(2);

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:device_explorer/src/common/base/base_provider.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
@@ -30,7 +31,11 @@ class FileProvider extends BaseProvider {
   Future<void> getFiles() async {
     path ??= PathManager().toString();
     final result = await FileManager().getFiles(path: path);
-    files = result?.data ?? [];
+    log('${DateTime.now()}  result: ${result?.data}', name: 'VERBOSE');
+    files = (result?.data ?? [])
+        .where((it) =>
+            it.name != null && it.name != '?' && it.name!.trim().isNotEmpty)
+        .toList();
     final sort = ToolBarManager().sort;
     if (sort != null) {
       if (sort.isByType) {

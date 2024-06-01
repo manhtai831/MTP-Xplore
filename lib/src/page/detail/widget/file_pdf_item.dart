@@ -35,7 +35,7 @@ class _FilePdfItemState extends State<FilePdfItem> {
     }
     final result = await FileManager()
         .pull(filePath: '${PathManager().toString()}/${widget.file?.name}');
-    if (result.error == null) {
+    if (result.isOke()) {
       path = result.data;
     } else {
       path = result.data?.split(":").firstOrNull;
