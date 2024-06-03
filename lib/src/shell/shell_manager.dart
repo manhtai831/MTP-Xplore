@@ -18,11 +18,11 @@ class ShellManager {
     StringCallBack? onStdErr,
   }) {
     process.stdout.transform(utf8.decoder).listen((it) {
-      log('${DateTime.now()}  stdout: ${it}', name: 'VERBOSE');
+      log('${DateTime.now()}  stdout: $it', name: 'VERBOSE');
       onStdOut?.call(it);
     });
     process.stderr.transform(utf8.decoder).listen((it) {
-      log('${DateTime.now()}  stderr: ${it}', name: 'VERBOSE');
+      log('${DateTime.now()}  stderr: $it', name: 'VERBOSE');
       onStdErr?.call(it);
     });
   }

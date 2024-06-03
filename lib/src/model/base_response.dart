@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 typedef FromString<T> = T Function(String);

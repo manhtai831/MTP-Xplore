@@ -12,11 +12,13 @@ import 'package:device_explorer/src/model/setting_model.dart';
 import 'package:device_explorer/src/page/dialog/confirm/confirm_dialog.dart';
 import 'package:device_explorer/src/page/dialog/create_folder/create_folder_dialog.dart';
 import 'package:device_explorer/src/page/dialog/file_editor/file_editor_dialog.dart';
+import 'package:device_explorer/src/page/dialog/pull_progress/pull_progress_dialog.dart';
 import 'package:device_explorer/src/page/dialog/sort/sort_dialog.dart';
 import 'package:device_explorer/src/shell/file_manager.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+
 import 'app_back_button.dart' as app_back;
 
 final pageHeaderDisplay = [
@@ -35,7 +37,6 @@ class _AppHeaderState extends State<AppHeader> {
   bool isDownload = false;
   double height = 50;
 
-  Timer? _timer;
   bool get isShow => pageHeaderDisplay.contains(SettingModel().settings?.name);
 
   GlobalKey containerKey = GlobalKey();
@@ -122,6 +123,7 @@ class _AppHeaderState extends State<AppHeader> {
               width: 12,
             ),
             BaseButton(
+              onDoubleTap: _onDownloadDoubleTap,
               onPressed: _onDownload,
               child: Image.asset(
                 isDownload ? IconPath.download : IconPath.staticDownload,
@@ -189,29 +191,20 @@ class _AppHeaderState extends State<AppHeader> {
     );
     if (path == null) return;
 
-    FileManager().pullQueue.addAll(
-          ToolBarManager().filePicked.map(
-                (it) => () => FileManager().pull(
-                      filePath: '${PathManager().toString()}/${it.name}',
-                      toPath: path,
-                      getResultPath: false,
-                    ),
-              ),
-        );
-    FileManager().execute();
-    startTimer();
-  }
-
-  void startTimer() {
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 2), (_) {
-      isUpload = FileManager().pushQueue.isNotEmpty;
-      isDownload = FileManager().pullQueue.isNotEmpty;
-      if (!isUpload && !isDownload) {
-        _timer?.cancel();
-      }
-      setState(() {});
-    });
+    FileManager().addPullQueue(
+      ToolBarManager()
+          .filePicked
+          .map(
+            (it) => () => FileManager().pull(
+                  filePath: '${PathManager().toString()}/${it.name}',
+                  fileInfo: it,
+                  progress: FileManager().pullController.sink,
+                  toPath: path,
+                  getResultPath: false,
+                ),
+          )
+          .toList(),
+    );
   }
 
   Future<void> _onUpload() async {
@@ -225,7 +218,7 @@ class _AppHeaderState extends State<AppHeader> {
     );
     if (path == null) return;
 
-    FileManager().pushQueue.add(
+    FileManager().addPushQueue(
       () async {
         final result = await FileManager().push(
           filePath: path,
@@ -235,8 +228,6 @@ class _AppHeaderState extends State<AppHeader> {
         return result;
       },
     );
-    FileManager().execute();
-    startTimer();
   }
 
   void _onEditFileName() {
@@ -274,6 +265,13 @@ class _AppHeaderState extends State<AppHeader> {
     showDialog(
       context: Application.navigatorKey.currentContext!,
       builder: (context) => const CreateFolderDialog(),
+    );
+  }
+
+  void _onDownloadDoubleTap() {
+    showDialog(
+      context: Application.navigatorKey.currentContext!,
+      builder: (context) => const PullProgressDialog(),
     );
   }
 }

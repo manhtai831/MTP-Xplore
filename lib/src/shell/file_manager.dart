@@ -14,7 +14,7 @@ import 'package:device_explorer/src/shell/device_manager.dart';
 import 'package:device_explorer/src/shell/shell_manager.dart';
 import 'package:path_provider/path_provider.dart';
 
-typedef FutureCallBack = Future<BaseResponse<String>?> Function();
+typedef FutureCallBack = Future<BaseResponse<String>> Function();
 
 class FileManager {
   FileManager._();
@@ -25,21 +25,32 @@ class FileManager {
 
   final pullQueue = Queue<FutureCallBack>();
   final pushQueue = Queue<FutureCallBack>();
-  Timer? _timer;
+  final StreamController<dynamic> pullController = StreamController.broadcast();
 
-  Future<void> execute() async {
-    while (pullQueue.isNotEmpty) {
-      final result = await pullQueue.first.call();
-      Application.showSnackBar(result?.data);
-      pullQueue.removeFirst();
-    }
+  Future<void> addPushQueue(FutureCallBack? onExecute) async {
+    bool isQueueExist = pullQueue.isNotEmpty;
+    if (isQueueExist) return;
+    if (onExecute == null) return;
+    pullQueue.add(onExecute);
     while (pushQueue.isNotEmpty) {
       final result = await pushQueue.first.call();
-
-      Application.showSnackBar(result?.data);
+      Application.showSnackBar(result.data);
       pushQueue.removeFirst();
     }
-    _timer?.cancel();
+  }
+
+  Future<void> addPullQueue(List<FutureCallBack>? onExecute) async {
+    bool isQueueExist = pullQueue.isNotEmpty;
+    log('${DateTime.now()}  isQueueExist: $isQueueExist', name: 'VERBOSE');
+    if (onExecute == null) return;
+    pullQueue.addAll(onExecute);
+    if (isQueueExist) return;
+    while (pullQueue.isNotEmpty) {
+      final result = await pullQueue.removeFirst().call();
+      pullController.add(result);
+      Application.showSnackBar(result.data);
+      await Future.delayed(const Duration(milliseconds: 300));
+    }
   }
 
   Future<BaseResponse<List<FileModel>>?> getFiles({String? path}) async {
@@ -72,7 +83,7 @@ class FileManager {
     FileModel? fileInfo,
     String? toPath,
     bool getResultPath = true,
-    StreamSink<ProgressModel>? progress,
+    StreamSink<dynamic>? progress,
   }) async {
     Completer<BaseResponse<String>> completer = Completer();
     toPath ??= (await getApplicationSupportDirectory()).path;
@@ -80,7 +91,7 @@ class FileManager {
       '-s',
       '${DeviceManager().current?.id}',
       'pull',
-      (filePath.trim()),
+      filePath.trim(),
       toPath,
     ]);
     String? fileName = filePath.split('/').lastOrNull;
@@ -90,8 +101,12 @@ class FileManager {
         int pulled = file.lengthSync();
         log('${DateTime.now()}  $fileName: ${pulled / 1000} KB',
             name: 'VERBOSE');
-        progress
-            ?.add(ProgressModel(total: fileInfo?.size, count: pulled * 1.0));
+        progress?.add(ProgressModel(
+          total: fileInfo?.size,
+          count: pulled * 1.0,
+          fromPath: filePath.trim(),
+          toPath: toPath,
+        ));
       }
     });
 
@@ -99,7 +114,7 @@ class FileManager {
       completer.complete(
         BaseResponse.success(
           it,
-          fromString: (p0) => getResultPath ? '$toPath/$fileName':p0.trim(),
+          fromString: (p0) => getResultPath ? '$toPath/$fileName' : p0.trim(),
         ),
       );
       timer.cancel();
@@ -112,7 +127,7 @@ class FileManager {
     return completer.future;
   }
 
-  Future<BaseResponse<String>?> push(
+  Future<BaseResponse<String>> push(
       {required String filePath, String? toPath}) async {
     bool isFile = false;
     try {
