@@ -52,3 +52,6 @@ Status | Command | Short Key
 [ x ] | Select multiple  | `Command(⌘) + click` or `Shift + click`
 [ ] | New tab  | `Command(⌘) + T`
 
+![Demo 1](<docs/Screenshot 2024-06-03 at 23.19.04.png>)
+
+![Demo 2](<docs/Screenshot 2024-06-03 at 23.19.12.png>)
