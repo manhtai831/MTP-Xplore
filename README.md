@@ -43,10 +43,10 @@ Status | Command | Short Key
 [ x ] | Refresh | `Command(⌘) + R`
 [ x ] | Rename | `Command(⌘) + D`
 [ x ] | Open | `Enter`
-[ x ] | Navigate left | `left`
-[ x ] | Navigate right | `right`
-[ ] | Navigate bottom | `down`
-[ ] | Navigate top | `up`
+[ ] | Navigate left | `left`
+[ ] | Navigate right | `right`
+[ x ] | Navigate bottom | `down`
+[ x ] | Navigate top | `up`
 [ ] | Select multiple forward | `Shift + left` or `Shift + up`
 [ ] | Select multiple backward | `Shift + right` or `Shift + down`
 [ x ] | Select multiple  | `Command(⌘) + click` or `Shift + click`
@@ -55,3 +55,12 @@ Status | Command | Short Key
 ![Demo 1](<docs/Screenshot 2024-06-03 at 23.19.04.png>)
 
 ![Demo 2](<docs/Screenshot 2024-06-03 at 23.19.12.png>)
+
+# Buy me a coffee
+![Payment QR](https://img.vietqr.io/image/CAKE-09435745556-print.png?addInfo=Device%20Xplore%20Coffee)
+
+# Contact
+
+![Contact me](docs/photo1717433884.jpeg)
+
+- [Telegram: t.me/Do_Manh_Tai](https://t.me/Do_Manh_Tai)
