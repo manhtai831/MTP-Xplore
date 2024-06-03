@@ -57,7 +57,7 @@ Status | Command | Short Key
 ![Demo 2](<docs/Screenshot 2024-06-03 at 23.19.12.png>)
 
 # Buy me a coffee
-![Payment QR](https://img.vietqr.io/image/CAKE-09435745556-print.png?addInfo=Device%20Xplore%20Coffee)
+![Payment QR](https://img.vietqr.io/image/CAKE-0943574556-print.png?addInfo=Device%20Xplore%20Coffee)
 
 # Contact
 
