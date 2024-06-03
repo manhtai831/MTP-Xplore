@@ -19,15 +19,15 @@
 - [  ] View grid 
 - [ x ] Delete file
 - [ x ] Rename file
-- [  ] Make folder
-- [ x ] View multi tab, add new instance
+- [ x ] Make folder
+- [  ] View multi tab, add new instance
 - [  ] Add short key
 - [  ] View file system 
 - [  ] Paste files/folder
 - [  ] Install apk
-- [  ] Navigate by keyboard
+- [ x ] Navigate by keyboard
 - [  ] Select all
-- [  ] Select multiple item by short key
+- [ x ] Select multiple item by short key
 
 # Short Key
 
@@ -49,6 +49,6 @@ Status | Command | Short Key
 [ ] | Navigate top | `up`
 [ ] | Select multiple forward | `Shift + left` or `Shift + up`
 [ ] | Select multiple backward | `Shift + right` or `Shift + down`
-[ ] | Select multiple  | `Command(⌘) + click` or `Shift + click`
+[ x ] | Select multiple  | `Command(⌘) + click` or `Shift + click`
 [ ] | New tab  | `Command(⌘) + T`
 
