@@ -20,15 +20,21 @@ class FilePage extends StatefulWidget {
 }
 
 class _FilePageState extends BaseState<FilePage, FileProvider> {
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: provider,
       child: Scaffold(
-        body: Consumer<FileProvider>(
-          builder: (_, p, v) => ListView.builder(
-            itemBuilder: _itemBuilder,
-            itemCount: provider.files.length,
+        body: KeyboardListener(
+          focusNode: provider.focusNode,
+          onKeyEvent: provider.onKeyEvent,
+          autofocus: true,
+          child: Consumer<FileProvider>(
+            builder: (_, p, v) => ListView.builder(
+              itemBuilder: _itemBuilder,
+              itemCount: provider.files.length,
+            ),
           ),
         ),
       ),

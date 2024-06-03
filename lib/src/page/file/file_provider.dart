@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/base_provider.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/manager/path/path_manager.dart';
@@ -8,8 +9,12 @@ import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dar
 import 'package:device_explorer/src/common/route/route_path.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/page/detail/file_detail_page.dart';
+import 'package:device_explorer/src/page/dialog/confirm/confirm_dialog.dart';
+import 'package:device_explorer/src/page/dialog/create_folder/create_folder_dialog.dart';
+import 'package:device_explorer/src/page/dialog/file_editor/file_editor_dialog.dart';
 import 'package:device_explorer/src/page/file/file_page.dart';
 import 'package:device_explorer/src/shell/file_manager.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class FileProvider extends BaseProvider {
@@ -18,6 +23,7 @@ class FileProvider extends BaseProvider {
   StreamSubscription<String>? _subscription;
   String? path;
   bool? isReload = false;
+  final focusNode = FocusNode();
   @override
   Future<void> init() async {
     args = getArguments();
@@ -136,6 +142,96 @@ class FileProvider extends BaseProvider {
       if (result == null) return;
 
       files.elementAt(result).isSelected = true;
+      notify();
+    }
+    ToolBarManager().filePicked =
+        files.where((it) => it.isSelected == true).toList();
+  }
+
+  Future<void> onKeyEvent(KeyEvent value) async {
+    log('${DateTime.now()}  value: $value', name: 'VERBOSE');
+    final isMetaPressed = HardwareKeyboard.instance.isMetaPressed;
+    final isAPressed =
+        HardwareKeyboard.instance.isLogicalKeyPressed(LogicalKeyboardKey.keyA);
+    final isNPressed =
+        HardwareKeyboard.instance.isLogicalKeyPressed(LogicalKeyboardKey.keyN);
+    final isRPressed =
+        HardwareKeyboard.instance.isLogicalKeyPressed(LogicalKeyboardKey.keyR);
+    final isDPressed =
+        HardwareKeyboard.instance.isLogicalKeyPressed(LogicalKeyboardKey.keyD);
+    final isEnterPressed =
+        HardwareKeyboard.instance.isLogicalKeyPressed(LogicalKeyboardKey.enter);
+    final isArrowUpPressed = HardwareKeyboard.instance
+        .isLogicalKeyPressed(LogicalKeyboardKey.arrowUp);
+    final isArrowDownPressed = HardwareKeyboard.instance
+        .isLogicalKeyPressed(LogicalKeyboardKey.arrowDown);
+
+    final isDeletePressed = HardwareKeyboard.instance
+        .isLogicalKeyPressed(LogicalKeyboardKey.backspace);
+
+    if (isMetaPressed && isAPressed) {
+      for (var it in files) {
+        it.isSelected = true;
+      }
+      ToolBarManager().filePicked = files;
+      notify();
+    } else if (isDeletePressed) {
+      if (ToolBarManager().filePicked.isEmpty) return;
+      final result = await showDialog(
+        context: Application.navigatorKey.currentContext!,
+        builder: (context) => const ConfirmDialog(
+          msg: 'Are you want to delete file/files?',
+        ),
+      );
+      if (result != true) return;
+      final fromPath =
+          '${PathManager()}/${ToolBarManager().filePicked.last.name ?? ''}';
+      await FileManager().delete(filePath: fromPath);
+      ToolBarManager().onReload();
+    } else if (isMetaPressed && isNPressed) {
+      showDialog(
+        context: Application.navigatorKey.currentContext!,
+        builder: (context) => const CreateFolderDialog(),
+      );
+    } else if (isMetaPressed && isRPressed) {
+      ToolBarManager().onReload();
+    } else if (isMetaPressed && isDPressed) {
+      if (ToolBarManager().filePicked.isEmpty) return;
+      showDialog(
+        context: Application.navigatorKey.currentContext!,
+        builder: (context) => const FileEditorDialog(),
+      );
+    } else if (isEnterPressed) {
+      if (ToolBarManager().filePicked.isEmpty) return;
+      onDoublePressed(ToolBarManager().filePicked.first,
+          files.indexOf(ToolBarManager().filePicked.first));
+    } else if (isArrowUpPressed) {
+      int index = files.indexOf(files.last);
+      if (ToolBarManager().filePicked.isNotEmpty) {
+        index = files.indexOf(ToolBarManager().filePicked.first);
+        index--;
+      }
+      if (index < 0) return;
+      for (var it in files) {
+        it.isSelected = false;
+      }
+      files.elementAt(index).isSelected = true;
+      ToolBarManager().filePicked =
+          files.where((it) => it.isSelected == true).toList();
+      notify();
+    } else if (isArrowDownPressed) {
+      int index = files.indexOf(files.first);
+      if (ToolBarManager().filePicked.isNotEmpty) {
+        index = files.indexOf(ToolBarManager().filePicked.last);
+        index++;
+      }
+      if (index >= files.length) return;
+      for (var it in files) {
+        it.isSelected = false;
+      }
+      files.elementAt(index).isSelected = true;
+      ToolBarManager().filePicked =
+          files.where((it) => it.isSelected == true).toList();
       notify();
     }
   }

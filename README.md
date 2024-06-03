@@ -35,16 +35,16 @@
 
 Status | Command | Short Key
 ---|--- | ---
-[ ] | Delete| `backspace`
-[ ] | New Folder | `Command(⌘) + N`
+[ x ] | Delete| `backspace`
+[ x ] | New Folder | `Command(⌘) + N`
 [ ] | Copy | `Command(⌘) + C`
 [ ] | Paste | `Command(⌘) + V`
-[ ] | Select All | `Command(⌘) + A`
-[ ] | Refresh | `Command(⌘) + R`
-[ ] | Rename | `Command(⌘) + D`
-[ ] | Open | `Enter`
-[ ] | Navigate left | `left`
-[ ] | Navigate right | `right`
+[ x ] | Select All | `Command(⌘) + A`
+[ x ] | Refresh | `Command(⌘) + R`
+[ x ] | Rename | `Command(⌘) + D`
+[ x ] | Open | `Enter`
+[ x ] | Navigate left | `left`
+[ x ] | Navigate right | `right`
 [ ] | Navigate bottom | `down`
 [ ] | Navigate top | `up`
 [ ] | Select multiple forward | `Shift + left` or `Shift + up`
