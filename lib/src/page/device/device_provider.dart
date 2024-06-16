@@ -4,9 +4,11 @@ import 'package:device_explorer/src/common/base/base_provider.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/manager/path/path_manager.dart';
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
+import 'package:device_explorer/src/common/res/audio_path.dart';
 import 'package:device_explorer/src/common/route/route_path.dart';
 import 'package:device_explorer/src/model/device_model.dart';
 import 'package:device_explorer/src/shell/device_manager.dart';
+import 'package:just_audio/just_audio.dart';
 
 class DeviceProvider extends BaseProvider {
   List<DeviceModel> devices = [];
@@ -31,10 +33,32 @@ class DeviceProvider extends BaseProvider {
   }
 
   Future<void> getDevices() async {
+    final prev = devices;
     devices.clear();
     final mDevices = await DeviceManager().getDevices();
     devices.addAll(mDevices.data ?? []);
     notify();
+    if (devices.isNotEmpty) {
+      if (isDiff(prev, devices)) {
+        final player = AudioPlayer();
+        player.setVolume(1);
+        await player.setAsset(AudioPath.deviceConnect);
+        await player.play();
+        // player.dispose();
+      }
+    }
+  }
+
+  bool isDiff(List<DeviceModel> l1, List<DeviceModel> l2) {
+    if (l1.length != l2.length) return true;
+    for (int i = 0; i < l1.length; i++) {
+      final item1 = l1.elementAt(i);
+      final item2 = l2.elementAt(i);
+      if (item1.id != item2.id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void onItemPressed(DeviceModel e) {

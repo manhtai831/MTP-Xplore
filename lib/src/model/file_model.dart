@@ -56,6 +56,17 @@ class FileModel {
   bool get isVideo => ['mp4'].contains(ext);
   bool get isPdf => ['pdf'].contains(ext);
 
+  String? getName() {
+    if (isDir) {
+      return name;
+    }
+    if (isLink) {
+      final split = name?.split(' -> ').firstOrNull;
+      return '$split/';
+    }
+    return null;
+  }
+
   String? get linkTo {
     final splits = name?.split('->').lastOrNull?.split('/');
     String? link = splits?.sublist(0, splits.length - 1).join('/');

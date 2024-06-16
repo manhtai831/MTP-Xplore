@@ -60,15 +60,18 @@ class _AppHeaderState extends State<AppHeader> {
         duration: const Duration(milliseconds: 300),
         child: Row(
           children: [
-            const app_back.AppBackButton(),
+            const Tooltip(message: 'Back', child: app_back.AppBackButton()),
             const SizedBox(
               width: 8,
             ),
-            BaseButton(
-              onPressed: _onGoHome,
-              child: Image.asset(
-                IconPath.home,
-                width: 32,
+            Tooltip(
+              message: 'Home',
+              child: BaseButton(
+                onPressed: _onGoHome,
+                child: Image.asset(
+                  IconPath.home,
+                  width: 32,
+                ),
               ),
             ),
             const SizedBox(
@@ -82,82 +85,106 @@ class _AppHeaderState extends State<AppHeader> {
                 ),
               ),
             ),
-            BaseButton(
-              onPressed: _onAddFolder,
-              child: Image.asset(
-                IconPath.addFolder,
-                width: 32,
+            Tooltip(
+              message: 'New Folder (⌘ + N)',
+              child: BaseButton(
+                onPressed: _onAddFolder,
+                child: Image.asset(
+                  IconPath.addFolder,
+                  width: 32,
+                ),
               ),
             ),
             const SizedBox(
               width: 12,
             ),
-            BaseButton(
-              onPressed: _onEditFileName,
-              child: Image.asset(
-                IconPath.editFile,
-                width: 32,
+            Tooltip(
+              message: 'Edit Name (⌘ + D)',
+              child: BaseButton(
+                onPressed: _onEditFileName,
+                child: Image.asset(
+                  IconPath.editFile,
+                  width: 32,
+                ),
               ),
             ),
             const SizedBox(
               width: 12,
             ),
-            BaseButton(
-              onPressed: _onDelete,
-              child: Image.asset(
-                IconPath.deleteFile,
-                width: 32,
+            Tooltip(
+              message: 'Delete (Backspace)',
+              child: BaseButton(
+                onPressed: _onDelete,
+                child: Image.asset(
+                  IconPath.deleteFile,
+                  width: 32,
+                ),
               ),
             ),
             const SizedBox(
               width: 12,
             ),
-            BaseButton(
-              onPressed: _onUpload,
-              child: Image.asset(
-                isUpload ? IconPath.upload : IconPath.staticUpload,
-                width: 32,
+            Tooltip(
+              message: 'Send file to Mobile',
+              child: BaseButton(
+                onPressed: _onUpload,
+                child: Image.asset(
+                  isUpload ? IconPath.upload : IconPath.staticUpload,
+                  width: 32,
+                ),
               ),
             ),
             const SizedBox(
               width: 12,
             ),
-            BaseButton(
-              onDoubleTap: _onDownloadDoubleTap,
-              onPressed: _onDownload,
-              child: Image.asset(
-                isDownload ? IconPath.download : IconPath.staticDownload,
-                width: 32,
+            Tooltip(
+              message: 'Send file to Computer',
+              child: BaseButton(
+                onDoubleTap: _onDownloadDoubleTap,
+                onPressed: _onDownload,
+                child: Image.asset(
+                  isDownload ? IconPath.download : IconPath.staticDownload,
+                  width: 32,
+                ),
               ),
             ),
             const SizedBox(
               width: 12,
             ),
-            BaseButton(
-              onPressed: _onSort,
-              child: Image.asset(
-                IconPath.sort,
-                width: 32,
+            Tooltip(
+              message: 'Sort',
+              child: BaseButton(
+                onPressed: _onSort,
+                child: Image.asset(
+                  IconPath.sort,
+                  width: 32,
+                ),
               ),
             ),
             const SizedBox(
               width: 12,
             ),
-            BaseButton(
-              onPressed: _onSetting,
-              child: Image.asset(
-                IconPath.setting,
-                width: 32,
+            Tooltip(
+              message: 'Setting',
+              child: BaseButton(
+                onPressed: _onSetting,
+                child: Image.asset(
+                  IconPath.setting,
+                  width: 32,
+                ),
               ),
             ),
             const SizedBox(
               width: 12,
             ),
-            BaseButton(
-              onPressed: ToolBarManager().onReload,
-              child: Image.asset(
-                IconPath.reload,
-                width: 32,
+            Tooltip(
+              message: 'Reload file',
+              child: BaseButton(
+                onPressed: ToolBarManager().onReload,
+                child: Image.asset(
+                  IconPath.reload,
+                  width: 32,
+                ),
               ),
             ),
           ],

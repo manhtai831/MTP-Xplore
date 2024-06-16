@@ -36,6 +36,7 @@ class FileProvider extends BaseProvider {
 
   Future<void> getFiles() async {
     path ??= PathManager().toString();
+     log('${DateTime.now()}  path: ${path}',name: 'VERBOSE');
     final result = await FileManager().getFiles(path: path);
     log('${DateTime.now()}  result: ${result?.data}', name: 'VERBOSE');
     files = (result?.data ?? [])
@@ -58,15 +59,15 @@ class FileProvider extends BaseProvider {
             .compareTo(a.created ?? DateTime.now()));
       }
     }
-    if (isReload != true) {
-      final realList = files.where((it) => !it.isBack);
-      if (realList.length == 1) {
-        final item = realList.elementAt(0);
-        if (item.isLink) {
-          onDoublePressed(item, 0);
-        }
-      }
-    }
+    // if (isReload != true) {
+    //   final realList = files.where((it) => !it.isBack);
+    //   if (realList.length == 1) {
+    //     final item = realList.elementAt(0);
+    //     if (item.isLink) {
+    //       onDoublePressed(item, 0);
+    //     }
+    //   }
+    // }
 
     final backItems = files.where((it) => it.isBack).toList();
 
@@ -117,7 +118,7 @@ class FileProvider extends BaseProvider {
       it.isSelected = false;
     }
     notify();
-    if (file.isDir) {
+    if (file.isDir || file.isLink) {
       if (file.name == '.') {
         return;
       } else if (file.name == '..') {
@@ -125,14 +126,9 @@ class FileProvider extends BaseProvider {
         context.pop();
         return;
       }
-      PathManager().add(file.name ?? '');
+    
+      PathManager().add(file.getName() ?? '');
       context.push(RoutePath.files, args: FilePageArgs(file: file));
-    } else if (file.isLink) {
-      PathManager().removeAll();
-      PathManager().addMany(file.linkTo ?? '');
-      await context.push(RoutePath.files, args: FilePageArgs(file: file));
-      PathManager().removeAll();
-      PathManager().addMany(path ?? '');
     } else {
       int currentSelected = files.indexOf(file);
       final result = await context.push(

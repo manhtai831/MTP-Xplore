@@ -4,6 +4,7 @@ import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:device_explorer/src/model/sort_model.dart';
 import 'package:device_explorer/src/page/dialog/sort/widget/sort_item.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 class SortDialog extends StatefulWidget {
   const SortDialog({super.key});
@@ -21,6 +22,14 @@ class _SortDialogState extends State<SortDialog> {
     SortModel(id: 5, icon: IconPath.date, name: 'Date decrement'),
   ];
   SortModel? current;
+
+  @override
+  void initState() {
+    super.initState();
+    current =
+        sorts.firstWhereOrNull((it) => ToolBarManager().sort?.id == it.id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(

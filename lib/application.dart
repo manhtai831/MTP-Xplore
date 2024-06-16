@@ -32,34 +32,37 @@ class _ApplicationState extends State<Application> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: Application.navigatorKey,
-      debugShowCheckedModeBanner: false,
-      title: 'Device Explore',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      navigatorObservers: [
-        SettingsObserver(),
-      ],
-      onGenerateRoute: _onGenerateRoute,
-      initialRoute: RoutePath.devices,
-      builder: (context, child) => ScaffoldMessenger(
-        key: Application.scaffoldMessengerKey,
-        child: Listener(
-          child: Column(
-            children: [
-           
-                const AppHeader(),
-              Expanded(child: child ?? const SizedBox()),
-            ],
-          ),
+        navigatorKey: Application.navigatorKey,
+        debugShowCheckedModeBanner: false,
+        title: 'Device Explore',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
         ),
-      ),
-    );
+        navigatorObservers: [
+          SettingsObserver(),
+        ],
+        onGenerateRoute: _onGenerateRoute,
+        initialRoute: RoutePath.devices,
+        builder: (context, child) => Overlay(
+              initialEntries: [
+                OverlayEntry(
+                  builder: (context) => ScaffoldMessenger(
+                    key: Application.scaffoldMessengerKey,
+                    child: Listener(
+                      child: Column(
+                        children: [
+                          const AppHeader(),
+                          Expanded(child: child ?? const SizedBox()),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ));
   }
 }
-
 
 Map<String, Widget> _routes = {
   RoutePath.devices: const DevicePage(),
