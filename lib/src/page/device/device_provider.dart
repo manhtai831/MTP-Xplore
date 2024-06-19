@@ -2,18 +2,44 @@ import 'dart:async';
 
 import 'package:device_explorer/src/common/base/base_provider.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
+import 'package:device_explorer/src/common/enum/tab_type.dart';
 import 'package:device_explorer/src/common/manager/path/path_manager.dart';
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
 import 'package:device_explorer/src/common/res/audio_path.dart';
 import 'package:device_explorer/src/common/route/route_path.dart';
 import 'package:device_explorer/src/model/device_model.dart';
+import 'package:device_explorer/src/page/tab/tab_provider.dart';
 import 'package:device_explorer/src/shell/device_manager.dart';
+import 'package:device_explorer/src/shell/file_system_repository.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:provider/provider.dart';
 
 class DeviceProvider extends BaseProvider {
   List<DeviceModel> devices = [];
+  List<DeviceModel> systemStorages = [
+    DeviceModel(
+      id: '-1',
+      model: 'Home',
+      type: 'System',
+      initPath: FileSystemRepository().getHomePath(),
+    ),
+    DeviceModel(
+      id: '-1',
+      model: 'Volumes',
+      type: 'System',
+      initPath: '/Volumes',
+    ),
+    DeviceModel(
+      id: '-1',
+      model: 'Root',
+      type: 'System',
+      initPath: '/',
+    ),
+  ];
   StreamSubscription<String>? _subscription;
   Timer? _timer;
+
+  TabProvider get tabProvider => context.read<TabProvider>();
 
   @override
   Future<void> init() async {
@@ -37,7 +63,7 @@ class DeviceProvider extends BaseProvider {
     devices.clear();
     final mDevices = await DeviceManager().getDevices();
     devices.addAll(mDevices.data ?? []);
-    notify();
+
     if (devices.isNotEmpty) {
       if (isDiff(prev, devices)) {
         final player = AudioPlayer();
@@ -47,6 +73,8 @@ class DeviceProvider extends BaseProvider {
         // player.dispose();
       }
     }
+    devices.addAll(systemStorages);
+    notify();
   }
 
   bool isDiff(List<DeviceModel> l1, List<DeviceModel> l2) {
@@ -62,9 +90,7 @@ class DeviceProvider extends BaseProvider {
   }
 
   void onItemPressed(DeviceModel e) {
-    DeviceManager().current = e;
-    PathManager().add('/');
-    context.push(RoutePath.files);
+    tabProvider.setDevice(e);
   }
 
   @override

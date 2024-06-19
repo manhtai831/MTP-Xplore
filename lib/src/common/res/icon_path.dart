@@ -17,14 +17,13 @@ class IconPath {
   static const String aToZ = 'assets/images/icons8-alphabetical-sorting-48.png';
   static const String date = 'assets/images/icons8-date.gif';
   static const String link = 'assets/images/icons8-link.gif';
-  static const String upload = 'assets/images/icons8-upload.gif';
-  static const String download = 'assets/images/icons8-download.gif';
-  static const String staticUpload = 'assets/images/icons8-upload-48.png';
-  static const String staticDownload = 'assets/images/icons8-download-48.png';
+  static const String copy = 'assets/images/icons8-copy-48.png';
+  static const String paste = 'assets/images/icons8-copy-to-clipboard-48.png';
   static const String deleteFile = 'assets/images/icons8-delete-file-32.png';
   static const String editFile = 'assets/images/icons8-edit-file-48.png';
   static const String home = 'assets/images/icons8-home-48.png';
   static const String addFolder = 'assets/images/icons8-add-folder-48.png';
   static const String storage = 'assets/images/icons8-storage-40.png';
   static const String clear = 'assets/images/icons8-clear-48.png';
+  static const String disk = 'assets/images/icons8-disk-91.png';
 }

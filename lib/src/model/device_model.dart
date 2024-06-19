@@ -7,10 +7,23 @@ class DeviceModel {
   String? model;
   String? device;
   String? transportId;
+  String? initPath;
+
+  bool get isSystem => type == 'System';
+
+  DeviceModel({
+    this.id,
+    this.type,
+    this.usb,
+    this.product,
+    this.model,
+    this.device,
+    this.transportId,
+    this.initPath,
+  });
 
   DeviceModel.fromString(String s) {
-
-    Iterable<String> splits = s.split(' ').where((it)=> it.isNotEmpty);
+    Iterable<String> splits = s.split(' ').where((it) => it.isNotEmpty);
     id = splits.elementAt(0);
     type = splits.elementAt(1);
     usb = splits.elementAt(2).split(':').elementAt(1);

@@ -7,16 +7,21 @@ import 'dart:convert' show utf8;
 import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/ext/string_ext.dart';
+import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
 import 'package:device_explorer/src/model/base_response.dart';
+import 'package:device_explorer/src/model/clipboard_data_model.dart';
+import 'package:device_explorer/src/model/device_model.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/model/progress_model.dart';
+import 'package:device_explorer/src/model/tab_model.dart';
 import 'package:device_explorer/src/shell/device_manager.dart';
+import 'package:device_explorer/src/shell/i_file_manager.dart';
 import 'package:device_explorer/src/shell/shell_manager.dart';
 import 'package:path_provider/path_provider.dart';
 
 typedef FutureCallBack = Future<BaseResponse<String>> Function();
 
-class FileManager {
+class FileManager implements IFileManager {
   FileManager._();
 
   static final FileManager _singleton = FileManager._();
@@ -53,15 +58,18 @@ class FileManager {
     }
   }
 
-  Future<BaseResponse<List<FileModel>>?> getFiles({String? path}) async {
+  @override
+  Future<BaseResponse<List<FileModel>>?> getFiles(
+      {String? path, DeviceModel? device}) async {
     final process = await Process.run(
       adb,
       [
         '-s',
-        '${DeviceManager().current?.id}',
+        '${device?.id}',
         'shell',
         'ls',
-        '-la',
+        '-l',
+        if (ToolBarManager().showHiddenFile) '-a',
         '$path',
       ],
       stderrEncoding: utf8,
@@ -84,12 +92,13 @@ class FileManager {
     String? toPath,
     bool getResultPath = true,
     StreamSink<dynamic>? progress,
+    DeviceModel? device,
   }) async {
     Completer<BaseResponse<String>> completer = Completer();
     toPath ??= (await getApplicationSupportDirectory()).path;
     final process = await Process.start(adb, [
       '-s',
-      '${DeviceManager().current?.id}',
+      '${device?.id}',
       'pull',
       filePath.trim(),
       toPath,
@@ -128,7 +137,7 @@ class FileManager {
   }
 
   Future<BaseResponse<String>> push(
-      {required String filePath, String? toPath}) async {
+      {required String filePath, String? toPath, DeviceModel? device}) async {
     bool isFile = false;
     try {
       final file = File(filePath.ePath ?? '');
@@ -138,7 +147,7 @@ class FileManager {
     }
     final process = await Process.run(adb, [
       '-s',
-      '${DeviceManager().current?.id}',
+      '${device?.id}',
       'push',
       isFile ? filePath.trim() : '${filePath.trim()}/.',
       '${toPath?.trim()}',
@@ -147,6 +156,7 @@ class FileManager {
     return BaseResponse.fromProcess(process);
   }
 
+  @override
   Future<BaseResponse<String>?> rename(
       {required String filePath, String? toPath}) async {
     final process = await Process.run(adb, [
@@ -161,6 +171,7 @@ class FileManager {
         fromString: (p0) => p0.split('\n').firstOrNull ?? filePath);
   }
 
+  @override
   Future<BaseResponse<String>?> delete({required String filePath}) async {
     final process = await Process.run(adb, [
       '-s',
@@ -174,6 +185,7 @@ class FileManager {
         fromString: (p0) => p0.split('\n').firstOrNull ?? filePath);
   }
 
+  @override
   Future<void> addFolder(
       {required String folderPath, required String rootPath}) async {
     final splits = folderPath.split('/');
@@ -187,6 +199,28 @@ class FileManager {
         'mkdir',
         path.trim(),
       ]);
+    }
+  }
+
+  @override
+  Future<void> onPaste({
+    required ClipboardDataModel data,
+    required TabModel targetTab,
+  }) async {
+    final targetDevice = targetTab.device;
+    final targetPath = targetTab.directory?.path;
+    // from computer
+    if (data.tab?.device?.isSystem == true) {
+      // to mobile
+      if (targetDevice?.isSystem == false) {
+        for (var it in data.files) {
+          await pull(
+            device: targetDevice,
+            filePath: it.path ?? '',
+            toPath: targetPath,
+          );
+        }
+      }
     }
   }
 }

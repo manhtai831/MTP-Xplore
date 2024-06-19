@@ -23,7 +23,9 @@ class _SettingPageState extends BaseState<SettingPage, BaseProvider> {
       value: provider,
       child: Scaffold(
         appBar: AppBar(
-          leading: const AppBackButton(),
+          leading: AppBackButton(
+            onBackPressed: context.pop,
+          ),
           title: BaseText.bold(
             title: 'Settings',
           ),
@@ -35,6 +37,11 @@ class _SettingPageState extends BaseState<SettingPage, BaseProvider> {
                 onPressed: () => context.push(RoutePath.storage),
                 icon: IconPath.storage,
                 title: 'Storage',
+              ),
+              ItemSetting(
+                onPressed: () => context.push(RoutePath.storage),
+                icon: IconPath.storage,
+                title: 'File Setting',
               ),
             ],
           ),

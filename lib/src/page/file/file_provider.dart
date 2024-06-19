@@ -7,15 +7,21 @@ import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/manager/path/path_manager.dart';
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
 import 'package:device_explorer/src/common/route/route_path.dart';
+import 'package:device_explorer/src/model/directory_model.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/page/detail/file_detail_page.dart';
 import 'package:device_explorer/src/page/dialog/confirm/confirm_dialog.dart';
 import 'package:device_explorer/src/page/dialog/create_folder/create_folder_dialog.dart';
 import 'package:device_explorer/src/page/dialog/file_editor/file_editor_dialog.dart';
 import 'package:device_explorer/src/page/file/file_page.dart';
+import 'package:device_explorer/src/page/tab/tab_provider.dart';
+import 'package:device_explorer/src/page/wrapper/wrapper_provider.dart';
 import 'package:device_explorer/src/shell/file_manager.dart';
+import 'package:device_explorer/src/shell/file_system_repository.dart';
+import 'package:device_explorer/src/shell/i_file_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class FileProvider extends BaseProvider {
   List<FileModel> files = [];
@@ -24,6 +30,12 @@ class FileProvider extends BaseProvider {
   String? path;
   bool? isReload = false;
   final focusNode = FocusNode();
+ List<FileModel> filePicked = [];
+
+  TabProvider get tabProvider => context.read<TabProvider>();
+  WrapperProvider get wrapperProvider => context.read<WrapperProvider>();
+
+
   @override
   Future<void> init() async {
     args = getArguments();
@@ -35,14 +47,17 @@ class FileProvider extends BaseProvider {
   }
 
   Future<void> getFiles() async {
-    path ??= PathManager().toString();
-     log('${DateTime.now()}  path: ${path}',name: 'VERBOSE');
-    final result = await FileManager().getFiles(path: path);
-    log('${DateTime.now()}  result: ${result?.data}', name: 'VERBOSE');
+    path = tabProvider.tab.directory?.path;
+    final result = await tabProvider.tab.repository
+        .getFiles(path: path, device: tabProvider.tab.device);
+
     files = (result?.data ?? [])
         .where((it) =>
             it.name != null && it.name != '?' && it.name!.trim().isNotEmpty)
         .toList();
+    for (var it in files) {
+      it.joinPath(path!);
+    }
     final sort = ToolBarManager().sort;
     if (sort != null) {
       if (sort.isByType) {
@@ -59,16 +74,6 @@ class FileProvider extends BaseProvider {
             .compareTo(a.created ?? DateTime.now()));
       }
     }
-    // if (isReload != true) {
-    //   final realList = files.where((it) => !it.isBack);
-    //   if (realList.length == 1) {
-    //     final item = realList.elementAt(0);
-    //     if (item.isLink) {
-    //       onDoublePressed(item, 0);
-    //     }
-    //   }
-    // }
-
     final backItems = files.where((it) => it.isBack).toList();
 
     files.removeWhere((it) => it.isBack);
@@ -100,7 +105,7 @@ class FileProvider extends BaseProvider {
       }
       file.isSelected = !file.isSelected;
     }
-    ToolBarManager().filePicked =
+filePicked =
         files.where((it) => it.isSelected == true).toList();
     notify();
     return;
@@ -113,7 +118,6 @@ class FileProvider extends BaseProvider {
   }
 
   Future<void> onDoublePressed(FileModel file, int index) async {
-    ToolBarManager().filePicked.clear();
     for (var it in files) {
       it.isSelected = false;
     }
@@ -122,13 +126,20 @@ class FileProvider extends BaseProvider {
       if (file.name == '.') {
         return;
       } else if (file.name == '..') {
-        PathManager().remove();
-        context.pop();
+        PathManager().add(file.getName() ?? '');
+        tabProvider.tab.directory = DirectoryModel(
+          parent: tabProvider.tab.directory,
+          path: file.path,
+        );
         return;
       }
-    
+
       PathManager().add(file.getName() ?? '');
-      context.push(RoutePath.files, args: FilePageArgs(file: file));
+      wrapperProvider.updateDir(DirectoryModel(
+        parent: tabProvider.tab.directory,
+        path: file.path,
+      ));
+      getFiles();
     } else {
       int currentSelected = files.indexOf(file);
       final result = await context.push(
@@ -140,7 +151,7 @@ class FileProvider extends BaseProvider {
       files.elementAt(result).isSelected = true;
       notify();
     }
-    ToolBarManager().filePicked =
+filePicked =
         files.where((it) => it.isSelected == true).toList();
   }
 
@@ -169,10 +180,10 @@ class FileProvider extends BaseProvider {
       for (var it in files) {
         it.isSelected = true;
       }
-      ToolBarManager().filePicked = files;
+      filePicked = files;
       notify();
     } else if (isDeletePressed) {
-      if (ToolBarManager().filePicked.isEmpty) return;
+      if (filePicked.isEmpty) return;
       final result = await showDialog(
         context: Application.navigatorKey.currentContext!,
         builder: (context) => const ConfirmDialog(
@@ -181,7 +192,7 @@ class FileProvider extends BaseProvider {
       );
       if (result != true) return;
       final fromPath =
-          '${PathManager()}/${ToolBarManager().filePicked.last.name ?? ''}';
+          '${PathManager()}/${filePicked.last.name ?? ''}';
       await FileManager().delete(filePath: fromPath);
       ToolBarManager().onReload();
     } else if (isMetaPressed && isNPressed) {
@@ -192,19 +203,19 @@ class FileProvider extends BaseProvider {
     } else if (isMetaPressed && isRPressed) {
       ToolBarManager().onReload();
     } else if (isMetaPressed && isDPressed) {
-      if (ToolBarManager().filePicked.isEmpty) return;
+      if (filePicked.isEmpty) return;
       showDialog(
         context: Application.navigatorKey.currentContext!,
         builder: (context) => const FileEditorDialog(),
       );
     } else if (isEnterPressed) {
-      if (ToolBarManager().filePicked.isEmpty) return;
-      onDoublePressed(ToolBarManager().filePicked.first,
-          files.indexOf(ToolBarManager().filePicked.first));
+      if (filePicked.isEmpty) return;
+      onDoublePressed(filePicked.first,
+          files.indexOf(filePicked.first));
     } else if (isArrowUpPressed) {
       int index = files.indexOf(files.last);
-      if (ToolBarManager().filePicked.isNotEmpty) {
-        index = files.indexOf(ToolBarManager().filePicked.first);
+      if (filePicked.isNotEmpty) {
+        index = files.indexOf(filePicked.first);
         index--;
       }
       if (index < 0) return;
@@ -212,13 +223,13 @@ class FileProvider extends BaseProvider {
         it.isSelected = false;
       }
       files.elementAt(index).isSelected = true;
-      ToolBarManager().filePicked =
+      filePicked =
           files.where((it) => it.isSelected == true).toList();
       notify();
     } else if (isArrowDownPressed) {
       int index = files.indexOf(files.first);
-      if (ToolBarManager().filePicked.isNotEmpty) {
-        index = files.indexOf(ToolBarManager().filePicked.last);
+      if (filePicked.isNotEmpty) {
+        index = files.indexOf(filePicked.last);
         index++;
       }
       if (index >= files.length) return;
@@ -226,7 +237,7 @@ class FileProvider extends BaseProvider {
         it.isSelected = false;
       }
       files.elementAt(index).isSelected = true;
-      ToolBarManager().filePicked =
+      filePicked =
           files.where((it) => it.isSelected == true).toList();
       notify();
     }

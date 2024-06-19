@@ -13,9 +13,10 @@ class ToolBarManager {
   factory ToolBarManager() => _singleton;
 
   final StreamController<String> _controller = StreamController.broadcast();
-  List<FileModel> filePicked = [];
+  // List<FileModel> filePicked = [];
 
   SortModel? sort = SortModel(id: 3);
+  bool showHiddenFile = false;
   SelectMode selectMode = SelectMode.viewDetail;
 
   StreamSubscription<String> onListenOnReload(VoidCallback? onReload) {

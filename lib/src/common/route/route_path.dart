@@ -1,4 +1,5 @@
 class RoutePath {
+  static const init = '/';
   static const devices = '/devices';
   static const files = '/files';
   static const fileDetail = '/file-detail';

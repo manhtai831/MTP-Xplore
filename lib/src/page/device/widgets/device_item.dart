@@ -17,7 +17,10 @@ class DeviceItem extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(IconPath.device),
+            Image.asset(
+              device?.isSystem == true ? IconPath.disk : IconPath.device,
+              width: 48,
+            ),
             BaseText.bold(
               title: device?.model,
             )

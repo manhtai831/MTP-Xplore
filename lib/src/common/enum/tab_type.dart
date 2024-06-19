@@ -1,0 +1,4 @@
+enum TabType {
+  adb,
+  system,
+}

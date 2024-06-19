@@ -68,7 +68,6 @@ class _FileDetailPageState
                 child: Opacity(
                   opacity: .3,
                   child: AppBackButton(
-                    onPopResult: () => provider.controller.page?.toInt(),
                   ),
                 ),
               ),

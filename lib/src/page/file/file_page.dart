@@ -1,4 +1,5 @@
 import 'package:device_explorer/src/common/base/base_state.dart';
+import 'package:device_explorer/src/common/widgets/app_header.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/page/file/file_provider.dart';
 import 'package:device_explorer/src/page/file/widget/file_item.dart';
@@ -30,11 +31,18 @@ class _FilePageState extends BaseState<FilePage, FileProvider> {
           focusNode: provider.focusNode,
           onKeyEvent: provider.onKeyEvent,
           autofocus: true,
-          child: Consumer<FileProvider>(
-            builder: (_, p, v) => ListView.builder(
-              itemBuilder: _itemBuilder,
-              itemCount: provider.files.length,
-            ),
+          child: Column(
+            children: [
+               const AppHeader(),
+              Expanded(
+                child: Consumer<FileProvider>(
+                  builder: (_, p, v) => ListView.builder(
+                    itemBuilder: _itemBuilder,
+                    itemCount: provider.files.length,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,10 +1,21 @@
+import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/manager/path/path_manager.dart';
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
 import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
+import 'package:device_explorer/src/model/directory_model.dart';
+import 'package:device_explorer/src/model/setting_model.dart';
+import 'package:device_explorer/src/model/tab_model.dart';
 import 'package:device_explorer/src/shell/file_manager.dart';
 import 'package:flutter/material.dart';
+
+class CreateFolderDialogArgs {
+  TabModel? tab;
+  CreateFolderDialogArgs({
+    this.tab,
+  });
+}
 
 class CreateFolderDialog extends StatefulWidget {
   const CreateFolderDialog({super.key});
@@ -15,6 +26,9 @@ class CreateFolderDialog extends StatefulWidget {
 
 class _CreateFolderDialogState extends State<CreateFolderDialog> {
   final TextEditingController _controller = TextEditingController();
+
+  CreateFolderDialogArgs get args =>
+      SettingModel().settings?.arguments as CreateFolderDialogArgs;
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -28,7 +42,8 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
               controller: _controller,
               autofocus: true,
               decoration: const InputDecoration(
-                  label: Text('New folder name'), hintText: 'Eg: create/new/path'),
+                  label: Text('New folder name'),
+                  hintText: 'Eg: create/new/path'),
             ),
             const SizedBox(
               height: 16,
@@ -80,12 +95,15 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
   }
 
   Future<void> _onUpdate() async {
-    await FileManager().addFolder(
-        rootPath: PathManager().toString(),
+    if (args.tab?.directory?.path == null) {
+      Application.showSnackBar('Not found path');
+      return;
+    }
+    await args.tab?.repository.addFolder(
+        rootPath: args.tab?.directory?.path ?? '',
         folderPath: _controller.text.trim());
-    ToolBarManager().onReload();
     if (mounted) {
-      context.pop();
+      context.pop(args: true);
     }
   }
 }

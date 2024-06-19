@@ -39,6 +39,7 @@ class BaseText extends StatelessWidget {
             fontSize: fontSize,
             fontWeight: fontWeight,
             color: color,
+            
           ),
     );
   }

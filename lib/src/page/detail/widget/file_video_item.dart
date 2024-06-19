@@ -49,7 +49,7 @@ class _FileVideoItemState extends State<FileVideoItem> {
       return path;
     }
     final result = await FileManager()
-        .pull(filePath: '${PathManager().toString()}/${widget.file?.name}');
+        .pull(filePath: widget.file?.path ?? '');
     if (result.isOke()) {
       path = result.data;
     } else {

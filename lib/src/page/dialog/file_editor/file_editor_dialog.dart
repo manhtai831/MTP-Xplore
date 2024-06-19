@@ -4,8 +4,20 @@ import 'package:device_explorer/src/common/manager/path/path_manager.dart';
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
 import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
+import 'package:device_explorer/src/model/file_model.dart';
+import 'package:device_explorer/src/model/setting_model.dart';
+import 'package:device_explorer/src/model/tab_model.dart';
 import 'package:device_explorer/src/shell/file_manager.dart';
 import 'package:flutter/material.dart';
+
+class FileEditorDialogArgs {
+  FileModel? file;
+  TabModel? tab;
+  FileEditorDialogArgs({
+    this.file,
+    this.tab,
+  });
+}
 
 class FileEditorDialog extends StatefulWidget {
   const FileEditorDialog({super.key});
@@ -17,11 +29,13 @@ class FileEditorDialog extends StatefulWidget {
 class _FileEditorDialogState extends State<FileEditorDialog> {
   final TextEditingController _controller = TextEditingController();
 
+  FileEditorDialogArgs get args =>
+      SettingModel().settings?.arguments as FileEditorDialogArgs;
   @override
   void initState() {
     super.initState();
-    final current = ToolBarManager().filePicked.last;
-    final fileName = current.name;
+    final current = args.file;
+    final fileName = current?.name;
     if (fileName != null && fileName.isNotEmpty) {
       _controller.text = fileName;
       int lastIndex = fileName.lastIndexOf('.');
@@ -99,15 +113,16 @@ class _FileEditorDialogState extends State<FileEditorDialog> {
   }
 
   Future<void> _onUpdate() async {
-    final fromPath =
-        '${PathManager().toString()}/${ToolBarManager().filePicked.last.name ?? ''}';
-    final toPath = '${PathManager().toString()}/${_controller.text.trim()}';
-    final result =
-        await FileManager().rename(filePath: fromPath, toPath: toPath);
-    Application.showSnackBar(result?.data);
-    ToolBarManager().onReload();
+    final fromPath = args.file?.path;
+    final toPath = '${args.file?.parentPath}/${_controller.text.trim()}';
+    if (fromPath == null) {
+      Application.showSnackBar('Path not found');
+      return;
+    }
+
+    await args.tab?.repository.rename(filePath: fromPath, toPath: toPath);
     if (mounted) {
-      context.pop();
+      context.pop(args: true);
     }
   }
 }

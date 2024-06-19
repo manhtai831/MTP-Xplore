@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:device_explorer/src/common/res/icon_path.dart';
 
 class FileModel {
@@ -5,6 +7,8 @@ class FileModel {
   int? childCount;
   String? user;
   String? group;
+  // init path is null
+  String? path;
 
   /// Size in bytes
   double? size;
@@ -73,6 +77,12 @@ class FileModel {
     return link;
   }
 
+  String? get parentPath {
+    final splits = path?.split('/');
+    String? link = splits?.sublist(0, splits.length - 1).join('/');
+    return link;
+  }
+
   bool get isBack => name == '.' || name == '..';
 
   String? get ext {
@@ -116,7 +126,14 @@ class FileModel {
     }
   }
 
-  FileModel.fromString(String s) {
+  void joinPath(String prefixPath) {
+    if (!prefixPath.endsWith('/')) {
+      prefixPath = '$prefixPath/';
+    }
+    path = '$prefixPath$name';
+  }
+
+  FileModel.fromString(String s, {bool isFileSystem = false}) {
     Iterable<String> splits = s.split(' ').where((it) => it.isNotEmpty);
     if (splits.isEmpty) return;
     permission = splits.elementAt(0);
@@ -126,7 +143,7 @@ class FileModel {
     size = double.tryParse(splits.elementAt(4));
     created =
         DateTime.tryParse('${splits.elementAt(5)} ${splits.elementAt(6)}');
-    name = splits.skip(7).join(' ');
+    name = splits.skip(isFileSystem ? 8 : 7).join(' ');
   }
 
   @override

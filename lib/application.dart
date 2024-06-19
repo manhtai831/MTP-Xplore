@@ -6,6 +6,8 @@ import 'package:device_explorer/src/page/device/device_page.dart';
 import 'package:device_explorer/src/page/file/file_page.dart';
 import 'package:device_explorer/src/page/setting/setting_page.dart';
 import 'package:device_explorer/src/page/setting/storage/storage_page.dart';
+import 'package:device_explorer/src/page/tab/tab_page.dart';
+import 'package:device_explorer/src/page/wrapper/wrapper_page.dart';
 import 'package:flutter/material.dart';
 
 class Application extends StatefulWidget {
@@ -32,39 +34,34 @@ class _ApplicationState extends State<Application> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        navigatorKey: Application.navigatorKey,
-        debugShowCheckedModeBanner: false,
-        title: 'Device Explore',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        navigatorObservers: [
-          SettingsObserver(),
+      navigatorKey: Application.navigatorKey,
+      debugShowCheckedModeBanner: false,
+      title: 'Device Explore',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      navigatorObservers: [
+        SettingsObserver(),
+      ],
+      onGenerateRoute: _onGenerateRoute,
+      initialRoute: RoutePath.init,
+      builder: (context, child) => Overlay(
+        initialEntries: [
+          OverlayEntry(
+            builder: (context) => ScaffoldMessenger(
+              key: Application.scaffoldMessengerKey,
+              child: child ?? const SizedBox(),
+            ),
+          )
         ],
-        onGenerateRoute: _onGenerateRoute,
-        initialRoute: RoutePath.devices,
-        builder: (context, child) => Overlay(
-              initialEntries: [
-                OverlayEntry(
-                  builder: (context) => ScaffoldMessenger(
-                    key: Application.scaffoldMessengerKey,
-                    child: Listener(
-                      child: Column(
-                        children: [
-                          const AppHeader(),
-                          Expanded(child: child ?? const SizedBox()),
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ));
+      ),
+    );
   }
 }
 
 Map<String, Widget> _routes = {
+  RoutePath.init: const WrapperPage(),
   RoutePath.devices: const DevicePage(),
   RoutePath.files: const FilePage(),
   RoutePath.fileDetail: const FileDetailPage(),

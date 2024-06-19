@@ -33,8 +33,7 @@ class _FilePdfItemState extends State<FilePdfItem> {
     if (File(path).existsSync()) {
       return path;
     }
-    final result = await FileManager()
-        .pull(filePath: '${PathManager().toString()}/${widget.file?.name}');
+    final result = await FileManager().pull(filePath: widget.file?.path ?? '');
     if (result.isOke()) {
       path = result.data;
     } else {

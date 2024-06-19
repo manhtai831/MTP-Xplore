@@ -2,22 +2,28 @@ import 'dart:async';
 
 import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
+import 'package:device_explorer/src/common/manager/clipboard/clipboard_manager.dart';
 import 'package:device_explorer/src/common/manager/path/path_manager.dart';
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
 import 'package:device_explorer/src/common/res/icon_path.dart';
 import 'package:device_explorer/src/common/route/route_path.dart';
 import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
+import 'package:device_explorer/src/model/clipboard_data_model.dart';
 import 'package:device_explorer/src/model/setting_model.dart';
 import 'package:device_explorer/src/page/dialog/confirm/confirm_dialog.dart';
 import 'package:device_explorer/src/page/dialog/create_folder/create_folder_dialog.dart';
 import 'package:device_explorer/src/page/dialog/file_editor/file_editor_dialog.dart';
 import 'package:device_explorer/src/page/dialog/pull_progress/pull_progress_dialog.dart';
 import 'package:device_explorer/src/page/dialog/sort/sort_dialog.dart';
+import 'package:device_explorer/src/page/file/file_provider.dart';
+import 'package:device_explorer/src/page/tab/tab_provider.dart';
+import 'package:device_explorer/src/page/wrapper/wrapper_provider.dart';
 import 'package:device_explorer/src/shell/file_manager.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'app_back_button.dart' as app_back;
 
@@ -37,9 +43,13 @@ class _AppHeaderState extends State<AppHeader> {
   bool isDownload = false;
   double height = 50;
 
-  bool get isShow => pageHeaderDisplay.contains(SettingModel().settings?.name);
+  bool get isShow => true;
 
   GlobalKey containerKey = GlobalKey();
+
+  TabProvider get tabProvider => context.read<TabProvider>();
+  WrapperProvider get wrapperProvider => context.read<WrapperProvider>();
+  FileProvider get fileProvider => context.read<FileProvider>();
   @override
   void initState() {
     super.initState();
@@ -60,7 +70,11 @@ class _AppHeaderState extends State<AppHeader> {
         duration: const Duration(milliseconds: 300),
         child: Row(
           children: [
-            const Tooltip(message: 'Back', child: app_back.AppBackButton()),
+            Tooltip(
+                message: 'Back',
+                child: app_back.AppBackButton(
+                  onBackPressed: _onBackPressed,
+                )),
             const SizedBox(
               width: 8,
             ),
@@ -78,10 +92,9 @@ class _AppHeaderState extends State<AppHeader> {
               width: 16,
             ),
             Expanded(
-              child: StreamBuilder<String>(
-                stream: PathManager().stream,
-                builder: (_, snapshot) => BaseText(
-                  title: PathManager().toString(),
+              child: Consumer<WrapperProvider>(
+                builder: (_, __, ___) => BaseText(
+                  title: tabProvider.tab.directory?.path,
                 ),
               ),
             ),
@@ -125,11 +138,11 @@ class _AppHeaderState extends State<AppHeader> {
               width: 12,
             ),
             Tooltip(
-              message: 'Send file to Mobile',
+              message: 'Copy',
               child: BaseButton(
-                onPressed: _onUpload,
+                onPressed: _onCopy,
                 child: Image.asset(
-                  isUpload ? IconPath.upload : IconPath.staticUpload,
+                  IconPath.copy,
                   width: 32,
                 ),
               ),
@@ -138,12 +151,11 @@ class _AppHeaderState extends State<AppHeader> {
               width: 12,
             ),
             Tooltip(
-              message: 'Send file to Computer',
+              message: 'Paste',
               child: BaseButton(
-                onDoubleTap: _onDownloadDoubleTap,
-                onPressed: _onDownload,
+                onPressed: _onPaste,
                 child: Image.asset(
-                  isDownload ? IconPath.download : IconPath.staticDownload,
+                  IconPath.paste,
                   width: 32,
                 ),
               ),
@@ -180,7 +192,7 @@ class _AppHeaderState extends State<AppHeader> {
             Tooltip(
               message: 'Reload file',
               child: BaseButton(
-                onPressed: ToolBarManager().onReload,
+                onPressed: fileProvider.getFiles,
                 child: Image.asset(
                   IconPath.reload,
                   width: 32,
@@ -204,74 +216,54 @@ class _AppHeaderState extends State<AppHeader> {
     );
   }
 
-  Future<void> _onDownload() async {
-    if (ToolBarManager().filePicked.isEmpty) {
+  Future<void> _onPaste() async {
+    final clipboard = ClipboardManager().data;
+    if (clipboard == null) return;
+    final currentProvider = fileProvider;
+    final targetTab = tabProvider.tab;
+    await targetTab.repository.onPaste(
+      data: clipboard,
+      targetTab: targetTab,
+    );
+    Application.showSnackBar('Pasted');
+    currentProvider.getFiles();
+  }
+
+  Future<void> _onCopy() async {
+    ClipboardManager().setData(ClipboardDataModel(
+        files: fileProvider.filePicked, tab: tabProvider.tab));
+    Application.showSnackBar('Copied');
+  }
+
+  Future<void> _onEditFileName() async {
+    if (fileProvider.filePicked.isEmpty) {
+      Application.showSnackBar('No such file selected');
       return;
     }
-    final downloadDir = await getDownloadsDirectory();
-    String? path = await FilesystemPicker.open(
-      title: 'Save to folder',
-      context: Application.navigatorKey.currentContext!,
-      rootDirectory: downloadDir,
-      fsType: FilesystemType.folder,
-      pickText: 'Save file to this folder',
-    );
-    if (path == null) return;
-
-    FileManager().addPullQueue(
-      ToolBarManager()
-          .filePicked
-          .map(
-            (it) => () => FileManager().pull(
-                  filePath: '${PathManager().toString()}/${it.name}',
-                  fileInfo: it,
-                  progress: FileManager().pullController.sink,
-                  toPath: path,
-                  getResultPath: false,
-                ),
-          )
-          .toList(),
-    );
-  }
-
-  Future<void> _onUpload() async {
-    final downloadDir = await getDownloadsDirectory();
-    String? path = await FilesystemPicker.open(
-      title: 'Open file/folder',
-      context: Application.navigatorKey.currentContext!,
-      rootDirectory: downloadDir,
-      fsType: FilesystemType.all,
-      fileTileSelectMode: FileTileSelectMode.wholeTile,
-    );
-    if (path == null) return;
-
-    FileManager().addPushQueue(
-      () async {
-        final result = await FileManager().push(
-          filePath: path,
-          toPath: PathManager().toString(),
-        );
-        ToolBarManager().onReload();
-        return result;
-      },
-    );
-  }
-
-  void _onEditFileName() {
-    if (ToolBarManager().filePicked.isEmpty) return;
-    showDialog(
+    final result = await showDialog(
       context: Application.navigatorKey.currentContext!,
       builder: (context) => const FileEditorDialog(),
+      routeSettings: RouteSettings(
+          arguments: FileEditorDialogArgs(
+        file: fileProvider.filePicked.lastOrNull,
+        tab: tabProvider.tab,
+      )),
     );
+    if (result != true) return;
+    fileProvider.getFiles();
   }
 
   void _onGoHome() {
-    PathManager().removeAll();
-    Application.navigatorKey.currentContext?.pop(util: RoutePath.devices);
+    wrapperProvider.updateDir(null);
+    tabProvider.notify();
   }
 
   Future<void> _onDelete() async {
-    if (ToolBarManager().filePicked.isEmpty) return;
+    if (fileProvider.filePicked.isEmpty) {
+      Application.showSnackBar('No such file selected');
+      return;
+    }
+
     final result = await showDialog(
       context: Application.navigatorKey.currentContext!,
       builder: (context) => const ConfirmDialog(
@@ -279,20 +271,27 @@ class _AppHeaderState extends State<AppHeader> {
       ),
     );
     if (result != true) return;
-    final fromPath =
-        '${PathManager()}/${ToolBarManager().filePicked.last.name ?? ''}';
-    await FileManager().delete(filePath: fromPath);
-    ToolBarManager().onReload();
-    if (mounted) {
-      context.pop();
+    for (var it in fileProvider.filePicked) {
+      if (it.path != null) {
+        await tabProvider.tab.repository.delete(filePath: it.path!);
+      }
     }
+
+    fileProvider.getFiles();
   }
 
-  void _onAddFolder() {
-    showDialog(
+  Future<void> _onAddFolder() async {
+    final result = await showDialog(
       context: Application.navigatorKey.currentContext!,
       builder: (context) => const CreateFolderDialog(),
+      routeSettings: RouteSettings(
+        arguments: CreateFolderDialogArgs(
+          tab: tabProvider.tab,
+        ),
+      ),
     );
+    if (result != true) return;
+    fileProvider.getFiles();
   }
 
   void _onDownloadDoubleTap() {
@@ -300,5 +299,12 @@ class _AppHeaderState extends State<AppHeader> {
       context: Application.navigatorKey.currentContext!,
       builder: (context) => const PullProgressDialog(),
     );
+  }
+
+  void _onBackPressed() {
+    final parent = tabProvider.tab.directory?.parent;
+    wrapperProvider.updateDir(parent);
+    if (parent == null) return;
+    fileProvider.getFiles();
   }
 }
