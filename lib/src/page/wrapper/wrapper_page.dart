@@ -18,7 +18,7 @@ class WrapperPage extends StatefulWidget {
 
 class _WrapperPageState extends BaseState<WrapperPage, WrapperProvider> {
   @override
-  WrapperProvider get registerProvider => WrapperProvider();
+  WrapperProvider get registerProvider => context.read<WrapperProvider>();
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +80,7 @@ class _WrapperPageState extends BaseState<WrapperPage, WrapperProvider> {
   Widget? _buildItem(BuildContext context, int index) {
     final item = provider.tabs.elementAt(index);
     return TabPage(
+      key: item.key,
       args: TabPageArgs(tab: item),
     );
   }

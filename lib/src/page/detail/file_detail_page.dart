@@ -1,12 +1,15 @@
 import 'package:device_explorer/src/common/base/base_state.dart';
+import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/widgets/app_back_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/page/detail/file_detail_provider.dart';
+import 'package:device_explorer/src/page/detail/widget/file_audio_item.dart';
 import 'package:device_explorer/src/page/detail/widget/file_image_item.dart';
 import 'package:device_explorer/src/page/detail/widget/file_pdf_item.dart';
 import 'package:device_explorer/src/page/detail/widget/file_video_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class FileDetailPageArgs {
@@ -63,12 +66,31 @@ class _FileDetailPageState
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
+              Consumer<FileDetailProvider>(builder: (context, value, child) {
+                if (provider.currentFile == null) {
+                  return const SizedBox();
+                }
+                return Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                      color: Colors.black26,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: BaseText.bold(
+                      title: provider.currentFile?.path,
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              }),
+               Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Opacity(
                   opacity: .3,
-                  child: AppBackButton(
-                  ),
+                  child: AppBackButton(onBackPressed: _onBackPressed,),
                 ),
               ),
             ],
@@ -93,7 +115,12 @@ class _FileDetailPageState
         file: item,
       );
     }
-   if (item?.isPdf ?? false) {
+    if (item?.isAudio ?? false) {
+      return FileAudioItem(
+        file: item,
+      );
+    }
+    if (item?.isPdf ?? false) {
       return FilePdfItem(
         file: item,
       );
@@ -103,5 +130,9 @@ class _FileDetailPageState
       title: 'Not support open: ${item?.name}',
       fontSize: 32,
     ));
+  }
+
+  void _onBackPressed() {
+    context.pop(args: provider.controller.page?.toInt());
   }
 }

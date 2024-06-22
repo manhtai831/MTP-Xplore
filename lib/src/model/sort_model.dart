@@ -9,6 +9,8 @@ class SortModel {
   bool get isByType => id == 3;
   bool get isDateAToZ => id == 4;
   bool get isDateZToA => id == 5;
+  bool get isByLengthIncrement => id == 6;
+  bool get isByLengthDecrement => id == 7;
 
   SortModel({
     this.id,

@@ -56,8 +56,9 @@ class FileModel {
   bool get isDir => permission?.startsWith('d') ?? false;
   bool get isLink => permission?.startsWith('l') ?? false;
   bool get isFile => permission?.startsWith('-') ?? false;
-  bool get isImage => ['jpg', 'png', 'jpeg', 'svg'].contains(ext);
-  bool get isVideo => ['mp4'].contains(ext);
+  bool get isImage => ['jpg', 'png', 'jpeg', 'svg','gif'].contains(ext);
+  bool get isVideo => ['mp4','m4v'].contains(ext);
+  bool get isAudio => ['mp3'].contains(ext);
   bool get isPdf => ['pdf'].contains(ext);
 
   String? getName() {

@@ -46,9 +46,6 @@ class _TabPageState extends BaseState<TabPage, TabProvider>
               builder: (_, data, ___) =>
                   data ? const DevicePage() : const FilePage(),
             ),
-            BaseText.bold(
-              title: hashCode.toString(),
-            )
           ],
         ),
       ),

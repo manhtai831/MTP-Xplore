@@ -64,4 +64,6 @@ class WrapperProvider extends BaseProvider {
     currentTab.directory = dir;
     notify();
   }
+
+  bool get isSystem => currentTab.device?.isSystem == true;
 }

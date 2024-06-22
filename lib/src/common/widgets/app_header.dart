@@ -65,8 +65,11 @@ class _AppHeaderState extends State<AppHeader> {
         height: isShow ? height : 0,
         padding: const EdgeInsets.all(8),
         decoration: const BoxDecoration(
-          color: Colors.white,
-        ),
+            color: Colors.white,
+            border: Border(
+                top: BorderSide(
+              color: Colors.black12,
+            ))),
         duration: const Duration(milliseconds: 300),
         child: Row(
           children: [

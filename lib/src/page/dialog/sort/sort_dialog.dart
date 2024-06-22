@@ -20,6 +20,8 @@ class _SortDialogState extends State<SortDialog> {
     SortModel(id: 3, icon: IconPath.sort, name: 'By Type'),
     SortModel(id: 4, icon: IconPath.date, name: 'Date increment'),
     SortModel(id: 5, icon: IconPath.date, name: 'Date decrement'),
+    SortModel(id: 6, icon: IconPath.date, name: 'By length increment'),
+    SortModel(id: 7, icon: IconPath.date, name: 'By length decrement'),
   ];
   SortModel? current;
 

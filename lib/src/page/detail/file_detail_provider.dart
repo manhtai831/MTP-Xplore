@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:device_explorer/src/common/base/base_provider.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
+import 'package:device_explorer/src/common/ext/duration_ext.dart';
+import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/page/detail/file_detail_page.dart';
 import 'package:flutter/material.dart';
 
@@ -19,8 +21,6 @@ class FileDetailProvider extends BaseProvider {
   Future<void> onKeyEvent(KeyEvent value) async {
     //     0x00100000302: 'Arrow Left',
     // 0x00100000303: 'Arrow Right',
-    log('${DateTime.now()}  value.logicalKey.keyLabel: ${value.logicalKey.keyLabel}',
-        name: 'VERBOSE');
     if (value.logicalKey.keyLabel == 'Arrow Left') {
       if (controller.page?.toInt() == 0) {
         return;
@@ -38,6 +38,15 @@ class FileDetailProvider extends BaseProvider {
     if (value.logicalKey.keyLabel == 'Escape') {
       if (mounted) context.pop();
     }
+  }
+
+  FileModel? get currentFile {
+    return args?.files?.elementAtOrNull(controller.page?.toInt() ?? 0);
+  }
+
+  @override
+  Future<void> onViewCreated() async {
+    notify();
   }
 
   @override

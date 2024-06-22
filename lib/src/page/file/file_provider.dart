@@ -30,11 +30,10 @@ class FileProvider extends BaseProvider {
   String? path;
   bool? isReload = false;
   final focusNode = FocusNode();
- List<FileModel> filePicked = [];
+  List<FileModel> filePicked = [];
 
   TabProvider get tabProvider => context.read<TabProvider>();
   WrapperProvider get wrapperProvider => context.read<WrapperProvider>();
-
 
   @override
   Future<void> init() async {
@@ -61,17 +60,24 @@ class FileProvider extends BaseProvider {
     final sort = ToolBarManager().sort;
     if (sort != null) {
       if (sort.isByType) {
-        files.sort((a, b) => (a.ext ?? '').compareTo(b.ext ?? ''));
+        files.sort((a, b) =>
+            (a.ext?.toLowerCase() ?? '').compareTo(b.ext?.toLowerCase() ?? ''));
       } else if (sort.isNameAToZ) {
-        files.sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
+        files.sort((a, b) => (a.name?.toLowerCase() ?? '')
+            .compareTo(b.name?.toLowerCase() ?? ''));
       } else if (sort.isNameZToA) {
-        files.sort((a, b) => (b.name ?? '').compareTo(a.name ?? ''));
+        files.sort((a, b) => (b.name?.toLowerCase() ?? '')
+            .compareTo(a.name?.toLowerCase() ?? ''));
       } else if (sort.isDateAToZ) {
         files.sort((a, b) => (a.created ?? DateTime.now())
             .compareTo(b.created ?? DateTime.now()));
       } else if (sort.isDateZToA) {
         files.sort((a, b) => (b.created ?? DateTime.now())
             .compareTo(a.created ?? DateTime.now()));
+      } else if (sort.isByLengthIncrement) {
+        files.sort((a, b) => (a.size ?? 0).compareTo(b.size ?? 0));
+      } else if (sort.isByLengthDecrement) {
+        files.sort((a, b) => (b.size ?? 0).compareTo(a.size ?? 0));
       }
     }
     final backItems = files.where((it) => it.isBack).toList();
@@ -105,8 +111,7 @@ class FileProvider extends BaseProvider {
       }
       file.isSelected = !file.isSelected;
     }
-filePicked =
-        files.where((it) => it.isSelected == true).toList();
+    filePicked = files.where((it) => it.isSelected == true).toList();
     notify();
     return;
   }
@@ -151,8 +156,7 @@ filePicked =
       files.elementAt(result).isSelected = true;
       notify();
     }
-filePicked =
-        files.where((it) => it.isSelected == true).toList();
+    filePicked = files.where((it) => it.isSelected == true).toList();
   }
 
   Future<void> onKeyEvent(KeyEvent value) async {
@@ -191,8 +195,7 @@ filePicked =
         ),
       );
       if (result != true) return;
-      final fromPath =
-          '${PathManager()}/${filePicked.last.name ?? ''}';
+      final fromPath = '${PathManager()}/${filePicked.last.name ?? ''}';
       await FileManager().delete(filePath: fromPath);
       ToolBarManager().onReload();
     } else if (isMetaPressed && isNPressed) {
@@ -210,8 +213,7 @@ filePicked =
       );
     } else if (isEnterPressed) {
       if (filePicked.isEmpty) return;
-      onDoublePressed(filePicked.first,
-          files.indexOf(filePicked.first));
+      onDoublePressed(filePicked.first, files.indexOf(filePicked.first));
     } else if (isArrowUpPressed) {
       int index = files.indexOf(files.last);
       if (filePicked.isNotEmpty) {
@@ -223,8 +225,7 @@ filePicked =
         it.isSelected = false;
       }
       files.elementAt(index).isSelected = true;
-      filePicked =
-          files.where((it) => it.isSelected == true).toList();
+      filePicked = files.where((it) => it.isSelected == true).toList();
       notify();
     } else if (isArrowDownPressed) {
       int index = files.indexOf(files.first);
@@ -237,8 +238,7 @@ filePicked =
         it.isSelected = false;
       }
       files.elementAt(index).isSelected = true;
-      filePicked =
-          files.where((it) => it.isSelected == true).toList();
+      filePicked = files.where((it) => it.isSelected == true).toList();
       notify();
     }
   }
