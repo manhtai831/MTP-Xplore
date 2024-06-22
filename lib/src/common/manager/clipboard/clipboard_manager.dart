@@ -1,5 +1,4 @@
 import 'package:device_explorer/src/model/clipboard_data_model.dart';
-import 'package:device_explorer/src/model/file_model.dart';
 
 class ClipboardManager {
   ClipboardManager._();

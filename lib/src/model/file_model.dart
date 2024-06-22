@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:device_explorer/src/common/res/icon_path.dart';
 

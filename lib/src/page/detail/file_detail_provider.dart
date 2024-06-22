@@ -1,8 +1,6 @@
-import 'dart:developer';
 
 import 'package:device_explorer/src/common/base/base_provider.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
-import 'package:device_explorer/src/common/ext/duration_ext.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/page/detail/file_detail_page.dart';
 import 'package:flutter/material.dart';

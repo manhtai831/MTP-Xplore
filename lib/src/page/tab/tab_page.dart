@@ -1,6 +1,4 @@
 import 'package:device_explorer/src/common/base/base_state.dart';
-import 'package:device_explorer/src/common/widgets/app_header.dart';
-import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:device_explorer/src/model/tab_model.dart';
 import 'package:device_explorer/src/page/device/device_page.dart';
 import 'package:device_explorer/src/page/file/file_page.dart';

@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:device_explorer/src/common/base/base_state.dart';
 import 'package:device_explorer/src/model/tab_model.dart';

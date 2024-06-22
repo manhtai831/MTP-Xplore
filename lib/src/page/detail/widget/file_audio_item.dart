@@ -34,7 +34,7 @@ class _FileAudioItemState extends State<FileAudioItem> {
     final path = await getPath();
     if (path == null) return;
     totalDuration = await player.setFilePath(path);
-    log('${DateTime.now()}  totalDuration: ${totalDuration}', name: 'VERBOSE');
+    log('${DateTime.now()}  totalDuration: $totalDuration', name: 'VERBOSE');
     player.play();
     setState(() {});
   }

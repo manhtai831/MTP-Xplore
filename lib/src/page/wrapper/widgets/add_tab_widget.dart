@@ -1,5 +1,4 @@
 import 'package:device_explorer/src/common/widgets/base_button.dart';
-import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:flutter/material.dart';
 
 class AddTabWidget extends StatelessWidget {

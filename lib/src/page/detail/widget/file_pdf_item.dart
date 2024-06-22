@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:device_explorer/src/common/manager/path/path_manager.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/page/wrapper/wrapper_provider.dart';
 import 'package:device_explorer/src/shell/file_manager.dart';

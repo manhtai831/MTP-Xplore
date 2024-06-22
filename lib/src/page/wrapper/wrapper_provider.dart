@@ -22,11 +22,11 @@ class WrapperProvider extends BaseProvider {
   void removeTab(TabModel tab) {
     if (tabs.length == 1) return;
     int index = tabs.indexOf(tab);
-    final _tab = currentTab;
+    final tab0 = currentTab;
     tabs.remove(tab);
     notify();
-    if (tab != _tab) {
-      index = tabs.indexOf(_tab);
+    if (tab != tab0) {
+      index = tabs.indexOf(tab0);
       controller.jumpToPage(index);
     } else {
       unselectedAll();

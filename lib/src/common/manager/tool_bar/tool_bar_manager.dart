@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:device_explorer/src/common/manager/tool_bar/select_mode.dart';
-import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/model/sort_model.dart';
 import 'package:flutter/material.dart';
 

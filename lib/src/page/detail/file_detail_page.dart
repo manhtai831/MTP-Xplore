@@ -87,7 +87,7 @@ class _FileDetailPageState
                 );
               }),
                Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Opacity(
                   opacity: .3,
                   child: AppBackButton(onBackPressed: _onBackPressed,),
