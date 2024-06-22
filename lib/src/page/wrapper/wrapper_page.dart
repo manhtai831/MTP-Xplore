@@ -71,6 +71,7 @@ class _WrapperPageState extends BaseState<WrapperPage, WrapperProvider> {
     final item = provider.tabs.elementAt(index);
     return ItemTab(
       item: item,
+      hasClose: provider.tabs.length != 1,
       onPressed: () => provider.onTabPressed(item),
       onClosePressed: () => provider.removeTab(item),
     );

@@ -28,7 +28,7 @@ class _FilePageState extends BaseState<FilePage, FileProvider> {
       value: provider,
       child: Scaffold(
         body: KeyboardListener(
-          focusNode: provider.focusNode,
+          focusNode: provider.tabProvider.tab.focusNode,
           onKeyEvent: provider.onKeyEvent,
           autofocus: true,
           child: Column(

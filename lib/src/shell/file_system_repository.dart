@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
@@ -37,7 +38,8 @@ class FileSystemRepository implements IFileManager {
           .split('\n')
           .skip(1)
           .map(
-            (it) => FileModel.fromString(it, isFileSystem: true),
+            (it) =>
+                FileModel.fromString(it, isFileSystem: true)..isSystem = true,
           )
           .toList();
     });
@@ -103,10 +105,11 @@ class FileSystemRepository implements IFileManager {
       // to computer
       if (targetDevice?.isSystem == true) {
         for (var it in data.files) {
-          await Process.run('cp', [
+         final result =  await Process.run('cp', [
             it.path ?? '',
             targetPath ?? '',
           ]);
+           log('${DateTime.now()}  result:${it.path} -> ${targetPath} ${result.stdout}',name: 'VERBOSE');
         }
       }
     }

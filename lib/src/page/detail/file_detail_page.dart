@@ -6,6 +6,7 @@ import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/page/detail/file_detail_provider.dart';
 import 'package:device_explorer/src/page/detail/widget/file_audio_item.dart';
 import 'package:device_explorer/src/page/detail/widget/file_image_item.dart';
+import 'package:device_explorer/src/page/detail/widget/file_json_item.dart';
 import 'package:device_explorer/src/page/detail/widget/file_pdf_item.dart';
 import 'package:device_explorer/src/page/detail/widget/file_video_item.dart';
 import 'package:flutter/material.dart';
@@ -86,11 +87,13 @@ class _FileDetailPageState
                   ),
                 );
               }),
-               Padding(
+              Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Opacity(
                   opacity: .3,
-                  child: AppBackButton(onBackPressed: _onBackPressed,),
+                  child: AppBackButton(
+                    onBackPressed: _onBackPressed,
+                  ),
                 ),
               ),
             ],
@@ -125,11 +128,9 @@ class _FileDetailPageState
         file: item,
       );
     }
-    return Center(
-        child: BaseText(
-      title: 'Not support open: ${item?.name}',
-      fontSize: 32,
-    ));
+    return FileJsonItem(
+      file: item,
+    );
   }
 
   void _onBackPressed() {

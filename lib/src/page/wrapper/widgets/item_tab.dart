@@ -4,8 +4,15 @@ import 'package:device_explorer/src/model/tab_model.dart';
 import 'package:flutter/material.dart';
 
 class ItemTab extends StatelessWidget {
-  const ItemTab({super.key, this.item, this.onPressed, this.onClosePressed});
+  const ItemTab({
+    super.key,
+    this.item,
+    this.onPressed,
+    this.onClosePressed,
+    this.hasClose,
+  });
   final TabModel? item;
+  final bool? hasClose;
   final VoidCallback? onPressed;
   final VoidCallback? onClosePressed;
   @override
@@ -34,10 +41,11 @@ class ItemTab extends StatelessWidget {
                 maxLines: 1,
               ),
             ),
-            BaseButton(
-              onPressed: onClosePressed,
-              child: const Icon(Icons.close_rounded),
-            )
+            if (hasClose == true)
+              BaseButton(
+                onPressed: onClosePressed,
+                child: const Icon(Icons.close_rounded),
+              )
           ],
         ),
       ),

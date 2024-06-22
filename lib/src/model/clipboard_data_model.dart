@@ -8,4 +8,7 @@ class ClipboardDataModel {
     required this.files,
     this.tab,
   });
+
+  @override
+  String toString() => 'ClipboardDataModel(files: $files, tab: $tab)';
 }

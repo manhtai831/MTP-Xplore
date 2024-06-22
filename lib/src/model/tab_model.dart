@@ -12,7 +12,8 @@ class TabModel {
   DirectoryModel? directory;
   bool isSelected = true;
   DeviceModel? device;
-
+  FocusNode focusNode = FocusNode();
+  
   TabModel({
     this.directory,
     this.isSelected = true,

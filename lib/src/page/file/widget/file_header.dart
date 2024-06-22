@@ -15,15 +15,13 @@ class _FileHeaderState extends State<FileHeader> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 2,
-              offset: Offset(-1, 2),
-              color: Colors.black12,
-            )
-          ]),
+      decoration: const BoxDecoration(color: Colors.white, boxShadow: [
+        BoxShadow(
+          blurRadius: 2,
+          offset: Offset(-1, 2),
+          color: Colors.black12,
+        )
+      ]),
       child: Row(
         children: [
           const SizedBox(width: 32),
@@ -54,8 +52,8 @@ class _FileHeaderState extends State<FileHeader> {
               padding: const EdgeInsets.symmetric(
                 vertical: 6,
               ),
-              width: 80,
-              alignment: Alignment.centerRight,
+              width: 100,
+              alignment: Alignment.center,
               child: StreamBuilder<String>(
                   stream: ToolBarManager().toolBarStream,
                   builder: (context, snapshot) {
@@ -70,14 +68,11 @@ class _FileHeaderState extends State<FileHeader> {
                   }),
             ),
           ),
-          const SizedBox(
-            width: 24,
-          ),
           BaseButton(
             onPressed: _onTypePressed,
             child: Container(
-              width: 80,
-              alignment: Alignment.centerRight,
+              width: 100,
+              alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(
                 vertical: 6,
               ),
@@ -93,26 +88,24 @@ class _FileHeaderState extends State<FileHeader> {
                   }),
             ),
           ),
-          const SizedBox(
-            width: 24,
-          ),
           Container(
+            width: 80,
             constraints: const BoxConstraints(minWidth: 56),
-            alignment: Alignment.centerRight,
+            alignment: Alignment.center,
             child: BaseText(
               title: 'Size',
             ),
-          ),
-          const SizedBox(
-            width: 24,
           ),
           BaseButton(
             onPressed: _onFilterByModified,
             child: Container(
               constraints: const BoxConstraints(minWidth: 160),
               alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(
-                vertical: 6,
+              padding: const EdgeInsets.fromLTRB(
+                0,
+                6,
+                16,
+                6,
               ),
               child: StreamBuilder<String>(
                   stream: ToolBarManager().toolBarStream,

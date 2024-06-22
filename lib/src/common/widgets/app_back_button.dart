@@ -9,13 +9,16 @@ class AppBackButton extends StatelessWidget {
   final VoidCallback? onBackPressed;
   @override
   Widget build(BuildContext context) {
-    return BaseButton(
-      onPressed: onBackPressed ?? _onBack,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(100),
-        child: Image.asset(
-          IconPath.back,
-          width: 32,
+    return Tooltip(
+      message: 'Back',
+      child: BaseButton(
+        onPressed: onBackPressed ?? _onBack,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: Image.asset(
+            IconPath.back,
+            width: 32,
+          ),
         ),
       ),
     );

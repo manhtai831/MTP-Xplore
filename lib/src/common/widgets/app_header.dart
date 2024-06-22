@@ -22,9 +22,6 @@ import 'package:provider/provider.dart';
 
 import 'app_back_button.dart' as app_back;
 
-final pageHeaderDisplay = [
-  RoutePath.files,
-];
 
 class AppHeader extends StatefulWidget {
   const AppHeader({super.key});
@@ -136,7 +133,7 @@ class _AppHeaderState extends State<AppHeader> {
               width: 12,
             ),
             Tooltip(
-              message: 'Copy',
+              message: 'Copy (⌘ + C)',
               child: BaseButton(
                 onPressed: _onCopy,
                 child: Image.asset(
@@ -149,7 +146,7 @@ class _AppHeaderState extends State<AppHeader> {
               width: 12,
             ),
             Tooltip(
-              message: 'Paste',
+              message: 'Paste (⌘ + V)',
               child: BaseButton(
                 onPressed: _onPaste,
                 child: Image.asset(

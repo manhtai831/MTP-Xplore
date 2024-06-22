@@ -34,4 +34,8 @@ class ToolBarManager {
     onReload();
   }
 
+  void setShowHiddenFile(bool value) {
+    showHiddenFile = value;
+    onReload();
+  }
 }

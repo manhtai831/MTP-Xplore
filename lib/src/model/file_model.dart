@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:device_explorer/src/common/res/icon_path.dart';
+import 'package:device_explorer/src/shell/file_manager.dart';
+import 'package:path_provider/path_provider.dart';
 
 class FileModel {
   String? permission;
@@ -7,6 +11,7 @@ class FileModel {
   String? group;
   // init path is null
   String? path;
+  bool? isSystem;
 
   /// Size in bytes
   double? size;
@@ -55,9 +60,12 @@ class FileModel {
   bool get isLink => permission?.startsWith('l') ?? false;
   bool get isFile => permission?.startsWith('-') ?? false;
   bool get isImage => ['jpg', 'png', 'jpeg', 'svg', 'gif'].contains(ext);
+  bool get isSvg => ['svg'].contains(ext);
   bool get isVideo => ['mp4', 'm4v'].contains(ext);
   bool get isAudio => ['mp3'].contains(ext);
+  bool get isIpa => ['ipa'].contains(ext);
   bool get isPdf => ['pdf'].contains(ext);
+  bool get isJson => ['json'].contains(ext);
   bool get isZip => ['zip', 'rar', '7zip'].contains(ext);
 
   String? getName() {
@@ -116,6 +124,14 @@ class FileModel {
         return IconPath.image;
       } else if (isVideo) {
         return IconPath.video;
+      } else if (isIpa) {
+        return IconPath.ipa;
+      } else if (isAudio) {
+        return IconPath.mp3;
+      } else if (isAudio) {
+        return IconPath.mp3;
+      } else if (isJson) {
+        return IconPath.json;
       } else {
         return IconPath.file;
       }
@@ -137,6 +153,22 @@ class FileModel {
       prefixPath = '$prefixPath/';
     }
     path = '$prefixPath$name';
+  }
+
+  Future<String?> getViewPath() async {
+    String? path = isSystem == true
+        ? this.path
+        : '${(await getApplicationSupportDirectory()).path}/${name?.split('/').lastOrNull}';
+    if (File(path!).existsSync()) {
+      return path;
+    }
+    final result = await FileManager().pull(filePath: this.path ?? '');
+    if (result.isOke()) {
+      path = result.data;
+    } else {
+      path = result.data?.split(":").firstOrNull;
+    }
+    return path;
   }
 
   FileModel.fromString(String s, {bool isFileSystem = false}) {

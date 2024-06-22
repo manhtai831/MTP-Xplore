@@ -27,13 +27,13 @@ class WrapperProvider extends BaseProvider {
     notify();
     if (tab != tab0) {
       index = tabs.indexOf(tab0);
-      controller.jumpToPage(index);
+      navigateToCurrentPage(index: index);
     } else {
       unselectedAll();
       if (tabs.length == 1) {
         index = 0;
       }
-      controller.jumpToPage(index);
+      navigateToCurrentPage(index: index);
       tabs[index].isSelected = true;
       notify();
     }
@@ -42,6 +42,7 @@ class WrapperProvider extends BaseProvider {
   void unselectedAll() {
     for (var it in tabs) {
       it.isSelected = false;
+      it.focusNode.unfocus();
     }
   }
 
@@ -56,8 +57,9 @@ class WrapperProvider extends BaseProvider {
     navigateToCurrentPage();
   }
 
-  void navigateToCurrentPage() {
-    if (mounted) controller.jumpToPage(currentTabIndex);
+  void navigateToCurrentPage({int? index}) {
+    if (mounted) controller.jumpToPage(index ?? currentTabIndex);
+    currentTab.focusNode.requestFocus();
   }
 
   void updateDir(DirectoryModel? dir) {

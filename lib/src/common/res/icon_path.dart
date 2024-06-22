@@ -7,6 +7,9 @@ class IconPath {
   static const String image = 'assets/images/icons8-image-48.png';
   static const String pdf = 'assets/images/icons8-pdf-48.png';
   static const String video = 'assets/images/icons8-video-file-48.png';
+  static const String ipa = 'assets/images/ipa-48.png';
+  static const String json = 'assets/images/icons8-json-40.png';
+  static const String mp3 = 'assets/images/icons8-mp3-40.png';
   static const String zip = 'assets/images/icons8-zip-48.png';
   static const String apk = 'assets/images/icons8-apk-64.png';
   static const String unknown = 'assets/images/icons8-question-mark-64.png';

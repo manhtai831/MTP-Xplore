@@ -3,6 +3,7 @@ import 'package:device_explorer/src/common/route/route_path.dart';
 import 'package:device_explorer/src/page/detail/file_detail_page.dart';
 import 'package:device_explorer/src/page/device/device_page.dart';
 import 'package:device_explorer/src/page/file/file_page.dart';
+import 'package:device_explorer/src/page/setting/file/file_setting_page.dart';
 import 'package:device_explorer/src/page/setting/setting_page.dart';
 import 'package:device_explorer/src/page/setting/storage/storage_page.dart';
 import 'package:device_explorer/src/page/wrapper/wrapper_page.dart';
@@ -34,9 +35,7 @@ class _ApplicationState extends State<Application> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_)=> WrapperProvider())
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => WrapperProvider())],
       child: MaterialApp(
         navigatorKey: Application.navigatorKey,
         debugShowCheckedModeBanner: false,
@@ -67,11 +66,10 @@ class _ApplicationState extends State<Application> {
 
 Map<String, Widget> _routes = {
   RoutePath.init: const WrapperPage(),
-  RoutePath.devices: const DevicePage(),
-  RoutePath.files: const FilePage(),
   RoutePath.fileDetail: const FileDetailPage(),
   RoutePath.settings: const SettingPage(),
   RoutePath.storage: const StoragePage(),
+  RoutePath.fileSetting: const FileSettingPage(),
 };
 
 Route? _onGenerateRoute(RouteSettings settings) {

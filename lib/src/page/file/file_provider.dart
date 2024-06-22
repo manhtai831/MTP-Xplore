@@ -5,9 +5,11 @@ import 'dart:io';
 import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/base_provider.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
+import 'package:device_explorer/src/common/manager/clipboard/clipboard_manager.dart';
 import 'package:device_explorer/src/common/manager/path/path_manager.dart';
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
 import 'package:device_explorer/src/common/route/route_path.dart';
+import 'package:device_explorer/src/model/clipboard_data_model.dart';
 import 'package:device_explorer/src/model/directory_model.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/page/detail/file_detail_page.dart';
@@ -29,7 +31,7 @@ class FileProvider extends BaseProvider {
   StreamSubscription<String>? _subscription;
   String? path;
   bool? isReload = false;
-  final focusNode = FocusNode();
+
   List<FileModel> filePicked = [];
 
   TabProvider get tabProvider => context.read<TabProvider>();
@@ -178,7 +180,6 @@ class FileProvider extends BaseProvider {
   }
 
   Future<void> onKeyEvent(KeyEvent value) async {
-    log('${DateTime.now()}  value: $value', name: 'VERBOSE');
     final isMetaPressed = HardwareKeyboard.instance.isMetaPressed;
     final isAPressed =
         HardwareKeyboard.instance.isLogicalKeyPressed(LogicalKeyboardKey.keyA);
@@ -186,6 +187,10 @@ class FileProvider extends BaseProvider {
         HardwareKeyboard.instance.isLogicalKeyPressed(LogicalKeyboardKey.keyN);
     final isRPressed =
         HardwareKeyboard.instance.isLogicalKeyPressed(LogicalKeyboardKey.keyR);
+    final isCPressed =
+        HardwareKeyboard.instance.isLogicalKeyPressed(LogicalKeyboardKey.keyC);
+    final isVPressed =
+        HardwareKeyboard.instance.isLogicalKeyPressed(LogicalKeyboardKey.keyV);
     final isDPressed =
         HardwareKeyboard.instance.isLogicalKeyPressed(LogicalKeyboardKey.keyD);
     final isEnterPressed =
@@ -198,40 +203,58 @@ class FileProvider extends BaseProvider {
     final isDeletePressed = HardwareKeyboard.instance
         .isLogicalKeyPressed(LogicalKeyboardKey.backspace);
 
+    // Command + A
     if (isMetaPressed && isAPressed) {
       for (var it in files) {
         it.isSelected = true;
       }
       filePicked = files;
       notify();
+      // Delete
     } else if (isDeletePressed) {
       if (filePicked.isEmpty) return;
       final result = await showDialog(
+      context: Application.navigatorKey.currentContext!,
+      builder: (context) => const ConfirmDialog(
+        msg: 'Are you want to delete file/files?',
+      ),
+    );
+    if (result != true) return;
+    for (var it in filePicked) {
+      if (it.path != null) {
+        await tabProvider.tab.repository.delete(filePath: it.path!);
+      }
+    }
+
+    getFiles();
+      // Command + N
+    } else if (isMetaPressed && isNPressed) {
+      final result = await showDialog(
         context: Application.navigatorKey.currentContext!,
-        builder: (context) => const ConfirmDialog(
-          msg: 'Are you want to delete file/files?',
+        builder: (context) => const CreateFolderDialog(),
+        routeSettings: RouteSettings(
+          arguments: CreateFolderDialogArgs(
+            tab: tabProvider.tab,
+          ),
         ),
       );
       if (result != true) return;
-      final fromPath = '${PathManager()}/${filePicked.last.name ?? ''}';
-      await FileManager().delete(filePath: fromPath);
-      ToolBarManager().onReload();
-    } else if (isMetaPressed && isNPressed) {
-      showDialog(
-        context: Application.navigatorKey.currentContext!,
-        builder: (context) => const CreateFolderDialog(),
-      );
+      getFiles();
+      // Command + R
     } else if (isMetaPressed && isRPressed) {
       ToolBarManager().onReload();
+      // Command + D
     } else if (isMetaPressed && isDPressed) {
       if (filePicked.isEmpty) return;
       showDialog(
         context: Application.navigatorKey.currentContext!,
         builder: (context) => const FileEditorDialog(),
       );
+      // Enter
     } else if (isEnterPressed) {
       if (filePicked.isEmpty) return;
       onDoublePressed(filePicked.first, files.indexOf(filePicked.first));
+      // Arrow Up
     } else if (isArrowUpPressed) {
       int index = files.indexOf(files.last);
       if (filePicked.isNotEmpty) {
@@ -245,6 +268,7 @@ class FileProvider extends BaseProvider {
       files.elementAt(index).isSelected = true;
       filePicked = files.where((it) => it.isSelected == true).toList();
       notify();
+      // Arrow down
     } else if (isArrowDownPressed) {
       int index = files.indexOf(files.first);
       if (filePicked.isNotEmpty) {
@@ -258,6 +282,25 @@ class FileProvider extends BaseProvider {
       files.elementAt(index).isSelected = true;
       filePicked = files.where((it) => it.isSelected == true).toList();
       notify();
+    } else if (isMetaPressed && isCPressed) {
+      log('${DateTime.now()}  filePicked: ${filePicked.length}',
+          name: 'VERBOSE');
+      ClipboardManager().setData(
+        ClipboardDataModel(
+          files: filePicked,
+          tab: tabProvider.tab,
+        ),
+      );
+      Application.showSnackBar('Copied');
+    } else if (isMetaPressed && isVPressed) {
+       log('${DateTime.now()}  ClipboardManager().data: ${ClipboardManager().data}',name: 'VERBOSE');
+      if (ClipboardManager().data == null) return;
+      await tabProvider.tab.repository.onPaste(
+        data: ClipboardManager().data!,
+        targetTab: tabProvider.tab,
+      );
+      Application.showSnackBar('Pasted');
+      getFiles();
     }
   }
 }

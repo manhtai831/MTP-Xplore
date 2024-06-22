@@ -8,6 +8,7 @@ class BaseText extends StatelessWidget {
   String? title;
   TextOverflow? overflow;
   int? maxLines;
+  TextAlign? textAlign;
 
   BaseText({
     super.key,
@@ -17,6 +18,7 @@ class BaseText extends StatelessWidget {
     this.title,
     this.overflow,
     this.maxLines,
+    this.textAlign,
   });
   
   BaseText.bold({
@@ -27,6 +29,7 @@ class BaseText extends StatelessWidget {
     this.title,
     this.overflow,
     this.maxLines,
+    this.textAlign,
   });
 
   @override
@@ -35,6 +38,7 @@ class BaseText extends StatelessWidget {
       title ?? '',
       overflow: overflow,
       maxLines: maxLines,
+      textAlign: textAlign,
       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             fontSize: fontSize,
             fontWeight: fontWeight,

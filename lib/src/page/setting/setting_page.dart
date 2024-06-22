@@ -39,8 +39,8 @@ class _SettingPageState extends BaseState<SettingPage, BaseProvider> {
                 title: 'Storage',
               ),
               ItemSetting(
-                onPressed: () => context.push(RoutePath.storage),
-                icon: IconPath.storage,
+                onPressed: () => context.push(RoutePath.fileSetting),
+                icon: IconPath.setting,
                 title: 'File Setting',
               ),
             ],

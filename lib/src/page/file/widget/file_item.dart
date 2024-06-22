@@ -1,6 +1,7 @@
 import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:device_explorer/src/model/file_model.dart';
+import 'package:device_explorer/src/page/file/widget/image_placeholder.dart';
 import 'package:flutter/material.dart';
 
 class FileItem extends StatelessWidget {
@@ -8,7 +9,7 @@ class FileItem extends StatelessWidget {
   final FileModel? file;
   final VoidCallback? onPressed;
   final VoidCallback? onDoubleTap;
-  
+
   @override
   Widget build(BuildContext context) {
     return BaseButton(
@@ -20,13 +21,13 @@ class FileItem extends StatelessWidget {
             color: file?.isSelected == true
                 ? Theme.of(context).primaryColor.withOpacity(.3)
                 : null,
-            border:
-                const Border(bottom: BorderSide(width: .5, color: Colors.black12))),
+            border: const Border(
+                bottom: BorderSide(width: .5, color: Colors.black12))),
         child: Row(
           children: [
-            Image.asset(
-              file?.icon ?? '',
-              width: 32,
+            ImagePlaceholder(
+              file: file,
+              size: Size.square(32),
             ),
             const SizedBox(
               width: 16,
