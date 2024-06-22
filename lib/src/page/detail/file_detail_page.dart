@@ -10,7 +10,6 @@ import 'package:device_explorer/src/page/detail/widget/file_json_item.dart';
 import 'package:device_explorer/src/page/detail/widget/file_pdf_item.dart';
 import 'package:device_explorer/src/page/detail/widget/file_video_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class FileDetailPageArgs {

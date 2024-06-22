@@ -19,7 +19,6 @@ import 'package:device_explorer/src/page/dialog/file_editor/file_editor_dialog.d
 import 'package:device_explorer/src/page/file/file_page.dart';
 import 'package:device_explorer/src/page/tab/tab_provider.dart';
 import 'package:device_explorer/src/page/wrapper/wrapper_provider.dart';
-import 'package:device_explorer/src/shell/file_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_archive/flutter_archive.dart';

@@ -109,7 +109,7 @@ class FileSystemRepository implements IFileManager {
             it.path ?? '',
             targetPath ?? '',
           ]);
-           log('${DateTime.now()}  result:${it.path} -> ${targetPath} ${result.stdout}',name: 'VERBOSE');
+           log('${DateTime.now()}  result:${it.path} -> $targetPath ${result.stdout}',name: 'VERBOSE');
         }
       }
     }

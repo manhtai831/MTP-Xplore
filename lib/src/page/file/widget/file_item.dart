@@ -27,7 +27,7 @@ class FileItem extends StatelessWidget {
           children: [
             ImagePlaceholder(
               file: file,
-              size: Size.square(32),
+              size: const Size.square(32),
             ),
             const SizedBox(
               width: 16,

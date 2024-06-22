@@ -34,6 +34,7 @@ class FileDetailProvider extends BaseProvider {
           duration: const Duration(milliseconds: 300), curve: Curves.linear);
     }
     if (value.logicalKey.keyLabel == 'Escape') {
+      // ignore: use_build_context_synchronously
       if (mounted) context.pop();
     }
   }
