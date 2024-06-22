@@ -1,4 +1,3 @@
-
 import 'package:device_explorer/src/common/res/icon_path.dart';
 
 class FileModel {
@@ -55,10 +54,11 @@ class FileModel {
   bool get isDir => permission?.startsWith('d') ?? false;
   bool get isLink => permission?.startsWith('l') ?? false;
   bool get isFile => permission?.startsWith('-') ?? false;
-  bool get isImage => ['jpg', 'png', 'jpeg', 'svg','gif'].contains(ext);
-  bool get isVideo => ['mp4','m4v'].contains(ext);
+  bool get isImage => ['jpg', 'png', 'jpeg', 'svg', 'gif'].contains(ext);
+  bool get isVideo => ['mp4', 'm4v'].contains(ext);
   bool get isAudio => ['mp3'].contains(ext);
   bool get isPdf => ['pdf'].contains(ext);
+  bool get isZip => ['zip', 'rar', '7zip'].contains(ext);
 
   String? getName() {
     if (isDir) {
@@ -69,6 +69,12 @@ class FileModel {
       return '$split/';
     }
     return null;
+  }
+
+  String? getNameWithoutExt() {
+    final splits = name?.split('.');
+    splits?.removeLast();
+    return splits?.join('_');
   }
 
   String? get linkTo {
@@ -104,7 +110,7 @@ class FileModel {
         return IconPath.pdf;
       } else if (ext == 'apk') {
         return IconPath.apk;
-      } else if (['zip', 'rar', '7zip'].contains(ext)) {
+      } else if (isZip) {
         return IconPath.zip;
       } else if (isImage) {
         return IconPath.image;

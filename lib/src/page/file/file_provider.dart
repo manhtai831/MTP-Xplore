@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/base_provider.dart';
@@ -19,6 +20,7 @@ import 'package:device_explorer/src/page/wrapper/wrapper_provider.dart';
 import 'package:device_explorer/src/shell/file_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_archive/flutter_archive.dart';
 import 'package:provider/provider.dart';
 
 class FileProvider extends BaseProvider {
@@ -143,6 +145,24 @@ class FileProvider extends BaseProvider {
         path: file.path,
       ));
       getFiles();
+    } else if (file.isZip) {
+      if (wrapperProvider.isSystem) {
+        if (wrapperProvider.currentTab.directory?.path == null) return;
+        if (file.path == null) return;
+        final zipFile = File(file.path!);
+        Directory destinationDir = Directory(
+            '${wrapperProvider.currentTab.directory!.path!}/${file.getNameWithoutExt()}_${DateTime.now().millisecondsSinceEpoch}');
+        try {
+          await ZipFile.extractToDirectory(
+            zipFile: zipFile,
+            destinationDir: destinationDir,
+          );
+          getFiles();
+          Application.showSnackBar('Extracted to: ${destinationDir.path}');
+        } catch (e) {
+          Application.showSnackBar(e.toString());
+        }
+      }
     } else {
       int currentSelected = files.indexOf(file);
       final result = await context.push(
