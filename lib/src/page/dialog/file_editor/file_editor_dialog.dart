@@ -59,6 +59,7 @@ class _FileEditorDialogState extends State<FileEditorDialog> {
               decoration: const InputDecoration(
                 label: Text('New Name'),
               ),
+              onSubmitted: (_)=> _onUpdate(),
             ),
             const SizedBox(
               height: 16,
@@ -110,14 +111,18 @@ class _FileEditorDialogState extends State<FileEditorDialog> {
   }
 
   Future<void> _onUpdate() async {
-    final fromPath = args.file?.path;
-    final toPath = '${args.file?.parentPath}/${_controller.text.trim()}';
-    if (fromPath == null) {
+    final fromPath = '\'${args.file?.path}\'';
+    final toPath = '\'${args.file?.parentPath}/${_controller.text.trim()}\'';
+    if (args.file?.path == null) {
       Application.showSnackBar('Path not found');
       return;
     }
 
-    await args.tab?.repository.rename(filePath: fromPath, toPath: toPath);
+    await args.tab?.repository.rename(
+      filePath: fromPath,
+      toPath: toPath,
+      device: args.tab?.device,
+    );
     if (mounted) {
       context.pop(args: true);
     }

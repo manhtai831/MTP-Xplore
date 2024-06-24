@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:device_explorer/src/common/res/icon_path.dart';
+import 'package:device_explorer/src/model/device_model.dart';
 import 'package:device_explorer/src/shell/file_manager.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -76,7 +77,7 @@ class FileModel {
       final split = name?.split(' -> ').firstOrNull;
       return '$split/';
     }
-    return null;
+    return name;
   }
 
   String? getNameWithoutExt() {
@@ -152,17 +153,21 @@ class FileModel {
     if (!prefixPath.endsWith('/')) {
       prefixPath = '$prefixPath/';
     }
-    path = '$prefixPath$name';
+    path = '$prefixPath${getName()}';
   }
 
-  Future<String?> getViewPath() async {
+  Future<String?> getViewPath({DeviceModel? device}) async {
     String? path = isSystem == true
         ? this.path
         : '${(await getApplicationSupportDirectory()).path}/${name?.split('/').lastOrNull}';
     if (File(path!).existsSync()) {
       return path;
     }
-    final result = await FileManager().pull(filePath: this.path ?? '');
+    final result = await FileManager().pull(
+      filePath: this.path ?? '',
+      fileInfo: this,
+      device: device,
+    );
     if (result.isOke()) {
       path = result.data;
     } else {

@@ -6,7 +6,6 @@ import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/base_provider.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/manager/clipboard/clipboard_manager.dart';
-import 'package:device_explorer/src/common/manager/path/path_manager.dart';
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
 import 'package:device_explorer/src/common/route/route_path.dart';
 import 'package:device_explorer/src/model/clipboard_data_model.dart';
@@ -132,7 +131,6 @@ class FileProvider extends BaseProvider {
       if (file.name == '.') {
         return;
       } else if (file.name == '..') {
-        PathManager().add(file.getName() ?? '');
         tabProvider.tab.directory = DirectoryModel(
           parent: tabProvider.tab.directory,
           path: file.path,
@@ -140,7 +138,6 @@ class FileProvider extends BaseProvider {
         return;
       }
 
-      PathManager().add(file.getName() ?? '');
       wrapperProvider.updateDir(DirectoryModel(
         parent: tabProvider.tab.directory,
         path: file.path,
@@ -213,19 +210,22 @@ class FileProvider extends BaseProvider {
     } else if (isDeletePressed) {
       if (filePicked.isEmpty) return;
       final result = await showDialog(
-      context: Application.navigatorKey.currentContext!,
-      builder: (context) => const ConfirmDialog(
-        msg: 'Are you want to delete file/files?',
-      ),
-    );
-    if (result != true) return;
-    for (var it in filePicked) {
-      if (it.path != null) {
-        await tabProvider.tab.repository.delete(filePath: it.path!);
+        context: Application.navigatorKey.currentContext!,
+        builder: (context) => const ConfirmDialog(
+          msg: 'Are you want to delete file/files?',
+        ),
+      );
+      if (result != true) return;
+      for (var it in filePicked) {
+        if (it.path != null) {
+          await tabProvider.tab.repository.delete(
+            filePath: it.path!,
+            device: tabProvider.tab.device,
+          );
+        }
       }
-    }
-
-    getFiles();
+      Application.showSnackBar('Deleted');
+      getFiles();
       // Command + N
     } else if (isMetaPressed && isNPressed) {
       final result = await showDialog(
@@ -245,10 +245,17 @@ class FileProvider extends BaseProvider {
       // Command + D
     } else if (isMetaPressed && isDPressed) {
       if (filePicked.isEmpty) return;
-      showDialog(
+      final result = await showDialog(
         context: Application.navigatorKey.currentContext!,
         builder: (context) => const FileEditorDialog(),
+        routeSettings: RouteSettings(
+            arguments: FileEditorDialogArgs(
+          file: filePicked.lastOrNull,
+          tab: tabProvider.tab,
+        )),
       );
+      if(result != true) return;
+      getFiles();
       // Enter
     } else if (isEnterPressed) {
       if (filePicked.isEmpty) return;
@@ -292,7 +299,8 @@ class FileProvider extends BaseProvider {
       );
       Application.showSnackBar('Copied');
     } else if (isMetaPressed && isVPressed) {
-       log('${DateTime.now()}  ClipboardManager().data: ${ClipboardManager().data}',name: 'VERBOSE');
+      log('${DateTime.now()}  ClipboardManager().data: ${ClipboardManager().data}',
+          name: 'VERBOSE');
       if (ClipboardManager().data == null) return;
       await tabProvider.tab.repository.onPaste(
         data: ClipboardManager().data!,

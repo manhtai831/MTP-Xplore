@@ -50,8 +50,11 @@ class FileSystemRepository implements IFileManager {
   }
 
   @override
-  Future<void> addFolder(
-      {required String folderPath, required String rootPath}) async {
+  Future<void> addFolder({
+    required String folderPath,
+    required String rootPath,
+    DeviceModel? device,
+  }) async {
     final splits = folderPath.split('/');
     String path = rootPath;
     for (var it in splits) {
@@ -63,7 +66,10 @@ class FileSystemRepository implements IFileManager {
   }
 
   @override
-  Future<BaseResponse<String>?> delete({required String filePath}) async {
+  Future<BaseResponse<String>?> delete({
+    required String filePath,
+    DeviceModel? device,
+  }) async {
     final process = await Process.run('rm', [
       '-rf',
       filePath.trim(),
@@ -73,12 +79,17 @@ class FileSystemRepository implements IFileManager {
   }
 
   @override
-  Future<BaseResponse<String>?> rename(
-      {required String filePath, String? toPath}) async {
+  Future<BaseResponse<String>?> rename({
+    required String filePath,
+    String? toPath,
+    DeviceModel? device,
+  }) async {
     final process = await Process.run('mv', [
-      filePath.trim(),
-      '${toPath?.trim()}',
+      filePath.trim().replaceAll('\'', ''),
+      '${toPath?.trim().replaceAll('\'', '')}',
     ]);
+    log('${DateTime.now()}  process: ${filePath.trim()} - ${toPath?.trim()} ${process.stderr}',
+        name: 'VERBOSE');
     return BaseResponse.fromProcess(process,
         fromString: (p0) => p0.split('\n').firstOrNull ?? filePath);
   }
@@ -87,15 +98,16 @@ class FileSystemRepository implements IFileManager {
   Future<void> onPaste(
       {required ClipboardDataModel data, required TabModel targetTab}) async {
     final targetDevice = targetTab.device;
+    final fromDevice = data.tab?.device;
     final targetPath = targetTab.directory?.path;
     // from mobile
     if (data.tab?.device?.isSystem == false) {
       // to computer
       if (targetDevice?.isSystem == true) {
         for (var it in data.files) {
-          await FileManager().push(
-            device: targetDevice,
-            filePath: it.path ?? '',
+          await FileManager().pull(
+            device: fromDevice,
+            filePath: it.isDir ? '${it.path}' : '${it.path}',
             toPath: targetPath,
           );
         }
@@ -105,11 +117,12 @@ class FileSystemRepository implements IFileManager {
       // to computer
       if (targetDevice?.isSystem == true) {
         for (var it in data.files) {
-         final result =  await Process.run('cp', [
+          final result = await Process.run('cp', [
             it.path ?? '',
             targetPath ?? '',
           ]);
-           log('${DateTime.now()}  result:${it.path} -> $targetPath ${result.stdout}',name: 'VERBOSE');
+          log('${DateTime.now()}  result:${it.path} -> $targetPath ${result.stdout}',
+              name: 'VERBOSE');
         }
       }
     }

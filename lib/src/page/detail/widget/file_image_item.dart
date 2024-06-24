@@ -25,7 +25,7 @@ class _FileImageItemState extends State<FileImageItem> {
   }
 
   void init() async {
-    path = await widget.file?.getViewPath();
+    path = await widget.file?.getViewPath(device: wrapperProvider.currentTab.device);
     if (mounted) setState(() {});
   }
 

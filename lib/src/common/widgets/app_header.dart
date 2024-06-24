@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
@@ -21,7 +22,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'app_back_button.dart' as app_back;
-
 
 class AppHeader extends StatefulWidget {
   const AppHeader({super.key});
@@ -266,12 +266,17 @@ class _AppHeaderState extends State<AppHeader> {
       ),
     );
     if (result != true) return;
+    final device = tabProvider.tab.device;
     for (var it in fileProvider.filePicked) {
       if (it.path != null) {
-        await tabProvider.tab.repository.delete(filePath: it.path!);
+        log('${DateTime.now()}  it.path: ${it.path}', name: 'VERBOSE');
+        await tabProvider.tab.repository.delete(
+          filePath: it.path!,
+          device: device,
+        );
       }
     }
-
+    Application.showSnackBar('Deleted');
     fileProvider.getFiles();
   }
 

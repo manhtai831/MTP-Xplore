@@ -1,15 +1,12 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:device_explorer/src/common/ext/duration_ext.dart';
 import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/page/wrapper/wrapper_provider.dart';
-import 'package:device_explorer/src/shell/file_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class FileAudioItem extends StatefulWidget {
@@ -31,28 +28,12 @@ class _FileAudioItemState extends State<FileAudioItem> {
   }
 
   Future<void> init() async {
-    final path = await getPath();
+    final path = await widget.file?.getViewPath(device: wrapperProvider.currentTab.device);
     if (path == null) return;
     totalDuration = await player.setFilePath(path);
     log('${DateTime.now()}  totalDuration: $totalDuration', name: 'VERBOSE');
     player.play();
     setState(() {});
-  }
-
-  Future<String?> getPath() async {
-    String? path = wrapperProvider.isSystem
-        ? widget.file?.path
-        : '${(await getApplicationSupportDirectory()).path}/${widget.file?.name?.split('/').lastOrNull}';
-    if (File(path!).existsSync()) {
-      return path;
-    }
-    final result = await FileManager().pull(filePath: widget.file?.path ?? '');
-    if (result.isOke()) {
-      path = result.data;
-    } else {
-      path = result.data?.split(":").firstOrNull;
-    }
-    return path;
   }
 
   @override

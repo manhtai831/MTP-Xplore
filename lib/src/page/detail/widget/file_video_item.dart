@@ -25,7 +25,7 @@ class _FileVideoItemState extends State<FileVideoItem> {
   }
 
   void init() async {
-    String? path = await widget.file?.getViewPath();
+    String? path = await widget.file?.getViewPath(device: wrapperProvider.currentTab.device);
     log('${DateTime.now()}  path: $path', name: 'VERBOSE');
     if (path == null) return;
     final file = File(path);

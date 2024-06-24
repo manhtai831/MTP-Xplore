@@ -4,7 +4,7 @@ import 'package:device_explorer/src/common/base/base_provider.dart';
 import 'package:flutter/material.dart';
 
 void showLog(dynamic msg) {
-  log('${DateTime.now()}    $msg', time: DateTime.now(),name: 'VERBOSE');
+  log('${DateTime.now()}    $msg', time: DateTime.now(), name: 'VERBOSE');
 }
 
 void showError(dynamic msg) {
@@ -16,7 +16,10 @@ extension ProviderExtension on BaseProvider {}
 extension ContextExt on BuildContext {
   NavigatorState get navigator => Navigator.of(this);
 
-  Future<T?> push<T>(String name, {dynamic args}) {
+  Future<T?> push<T>(String name, {dynamic args, bool replace = false}) {
+    if (replace) {
+      return navigator.pushReplacementNamed(name, arguments: args);
+    }
     return navigator.pushNamed<T>(name, arguments: args);
   }
 

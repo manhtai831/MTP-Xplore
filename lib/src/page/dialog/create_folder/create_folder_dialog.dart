@@ -38,8 +38,10 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
               controller: _controller,
               autofocus: true,
               decoration: const InputDecoration(
-                  label: Text('New folder name'),
-                  hintText: 'Eg: create/new/path'),
+                label: Text('New folder name'),
+                hintText: 'Eg: create/new/path',
+              ),
+              onSubmitted: (_) => _onUpdate(),
             ),
             const SizedBox(
               height: 16,
@@ -96,8 +98,10 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
       return;
     }
     await args.tab?.repository.addFolder(
-        rootPath: args.tab?.directory?.path ?? '',
-        folderPath: _controller.text.trim());
+      rootPath: args.tab?.directory?.path ?? '',
+      folderPath: _controller.text.trim(),
+      device: args.tab?.device,
+    );
     if (mounted) {
       context.pop(args: true);
     }

@@ -13,15 +13,18 @@ abstract class IFileManager {
   Future<BaseResponse<String>?> rename({
     required String filePath,
     String? toPath,
+      DeviceModel? device,
   });
 
   Future<BaseResponse<String>?> delete({
     required String filePath,
+     DeviceModel? device,
   });
 
   Future<void> addFolder({
     required String folderPath,
     required String rootPath,
+      DeviceModel? device,
   });
 
   Future<void> onPaste({

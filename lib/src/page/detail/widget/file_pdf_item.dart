@@ -22,7 +22,7 @@ class _FilePdfItemState extends State<FilePdfItem> {
   }
 
   Future<void> init() async {
-    path = await widget.file?.getViewPath();
+    path = await widget.file?.getViewPath(device: wrapperProvider.currentTab.device);
     setState(() {});
   }
 

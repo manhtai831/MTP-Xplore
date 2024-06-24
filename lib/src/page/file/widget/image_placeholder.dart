@@ -20,11 +20,13 @@ class ImagePlaceholder extends StatelessWidget {
           return SvgPicture.file(
             File(file!.path!),
             width: size?.width,
+            height: size?.height,
           );
         } else {
           return Image.file(
             File(file!.path!),
             width: size?.width,
+              height: size?.height,
           );
         }
       }
@@ -32,6 +34,7 @@ class ImagePlaceholder extends StatelessWidget {
     return Image.asset(
       file?.icon ?? '',
       width: size?.width,
+        height: size?.height,
     );
   }
 }

@@ -2,9 +2,11 @@ import 'dart:convert' show utf8;
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:device_explorer/src/common/manager/sdk/sdk_manager.dart';
+
 typedef StringCallBack = void Function(String);
-String get adb =>
-    '${Platform.environment['HOME']}/Library/Android/sdk/platform-tools/adb';
+
+String get adb => SdkManager().adb;
 
 class ShellManager {
   ShellManager._();

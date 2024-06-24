@@ -20,6 +20,7 @@ dependencies:
   flutter_archive: 6.0.0
   just_audio: ^0.9.38
   flutter_svg: ^2.0.10+1
+  dio: ^5.4.3+1
 
 
 dev_dependencies:

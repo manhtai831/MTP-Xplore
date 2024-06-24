@@ -1,6 +1,7 @@
 import 'package:device_explorer/src/common/base/settings_observer.dart';
 import 'package:device_explorer/src/common/route/route_path.dart';
 import 'package:device_explorer/src/page/detail/file_detail_page.dart';
+import 'package:device_explorer/src/page/download/download_page.dart';
 import 'package:device_explorer/src/page/setting/file/file_setting_page.dart';
 import 'package:device_explorer/src/page/setting/setting_page.dart';
 import 'package:device_explorer/src/page/setting/storage/storage_page.dart';
@@ -63,7 +64,8 @@ class _ApplicationState extends State<Application> {
 }
 
 Map<String, Widget> _routes = {
-  RoutePath.init: const WrapperPage(),
+  RoutePath.init: const DownloadPage(),
+  RoutePath.wrapper: const WrapperPage(),
   RoutePath.fileDetail: const FileDetailPage(),
   RoutePath.settings: const SettingPage(),
   RoutePath.storage: const StoragePage(),

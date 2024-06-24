@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/page/detail/widget/unsupport_item.dart';
+import 'package:device_explorer/src/page/wrapper/wrapper_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FileJsonItem extends StatefulWidget {
   const FileJsonItem({super.key, this.file});
@@ -16,6 +18,8 @@ class FileJsonItem extends StatefulWidget {
 class _FileJsonItemState extends State<FileJsonItem> {
   List<String>? contents = [];
 
+  WrapperProvider get wrapperProvider => context.read<WrapperProvider>();
+
   @override
   void initState() {
     super.initState();
@@ -23,7 +27,7 @@ class _FileJsonItemState extends State<FileJsonItem> {
   }
 
   Future<void> init() async {
-    final path = await widget.file?.getViewPath();
+    final path = await widget.file?.getViewPath(device: wrapperProvider.currentTab.device);
     if (path == null) return;
     final file = File(path);
 
