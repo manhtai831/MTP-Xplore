@@ -185,12 +185,16 @@ class _AppHeaderState extends State<AppHeader> {
               width: 12,
             ),
             Tooltip(
-              message: 'Reload file',
+              message: 'Reload file (⌘ + R)',
               child: BaseButton(
                 onPressed: fileProvider.getFiles,
-                child: Image.asset(
-                  IconPath.reload,
-                  width: 32,
+                
+                child: Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: Image.asset(
+                    IconPath.reload,
+                    width: 32,
+                  ),
                 ),
               ),
             ),

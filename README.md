@@ -5,9 +5,9 @@
 - Core: ADB
 
 # Required System
-- Install ADB
 
 # Feature
+- [ x ] Auto install adb if not exist
 - [ x ] Copy files/folder from host to adb
 - [ x ] Copy files/folder from adb to host
 - [ x ] Reload file list
@@ -20,13 +20,13 @@
 - [ x ] Delete file
 - [ x ] Rename file
 - [ x ] Make folder
-- [  ] View multi tab, add new instance
-- [  ] Add short key
-- [  ] View file system 
-- [  ] Paste files/folder
+- [ x ] View multi tab, add new instance
+- [ x ] Add short key
+- [ x ] View file system 
+- [ x ] Paste files/folder
 - [  ] Install apk
 - [ x ] Navigate by keyboard
-- [  ] Select all
+- [ x ] Select all
 - [ x ] Select multiple item by short key
 
 # Short Key
@@ -37,8 +37,8 @@ Status | Command | Short Key
 ---|--- | ---
 [ x ] | Delete| `backspace`
 [ x ] | New Folder | `Command(⌘) + N`
-[ ] | Copy | `Command(⌘) + C`
-[ ] | Paste | `Command(⌘) + V`
+[ x ] | Copy | `Command(⌘) + C`
+[ x ] | Paste | `Command(⌘) + V`
 [ x ] | Select All | `Command(⌘) + A`
 [ x ] | Refresh | `Command(⌘) + R`
 [ x ] | Rename | `Command(⌘) + D`
