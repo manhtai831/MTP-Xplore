@@ -6,3 +6,5 @@
 - Copy/Paste file/folder from computer to mobile by usb
 - View computer file manager
 - Add script build dmg file
+- View MP3
+- View Json/text file

@@ -52,9 +52,9 @@ Status | Command | Short Key
 [ ✅] | Select multiple  | `Command(⌘) + click` or `Shift + click`
 [ ] | New tab  | `Command(⌘) + T`
 
-![Demo 1](<docs/Screenshot 2024-06-03 at 23.19.04.png>)
+![Demo 1](<docs/Screenshot 2024-06-25 at 23.27.20.png>)
 
-![Demo 2](<docs/Screenshot 2024-06-03 at 23.19.12.png>)
+![Demo 2](<docs/Screenshot 2024-06-25 at 23.27.46.png>)
 
 # Buy me a coffee
 ![Payment QR](https://img.vietqr.io/image/CAKE-0943574556-print.png?addInfo=Device%20Xplore%20Coffee)
