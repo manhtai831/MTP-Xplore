@@ -8,6 +8,8 @@
 
 # Feature
 - [ ✅ ] Auto install adb if not exist
+- [ ✅ ] Extract Zip file
+- [ ✅ ] View audio, text, json, mp3, mp4, image, svg
 - [ ✅ ] Copy files/folder from host to adb
 - [ ✅ ] Copy files/folder from adb to host
 - [ ✅ ] Reload file list

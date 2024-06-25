@@ -8,3 +8,4 @@
 - Add script build dmg file
 - View MP3
 - View Json/text file
+- Extract Zip file
