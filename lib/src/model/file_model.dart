@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:device_explorer/src/common/ext/string_ext.dart';
 import 'package:device_explorer/src/common/res/icon_path.dart';
 import 'package:device_explorer/src/model/device_model.dart';
 import 'package:device_explorer/src/shell/file_manager.dart';
@@ -186,6 +188,24 @@ class FileModel {
     size = double.tryParse(splits.elementAt(4));
     created =
         DateTime.tryParse('${splits.elementAt(5)} ${splits.elementAt(6)}');
+    if (isFileSystem) {
+      int? month = splits.elementAt(5).toLowerCase().trim().monthFromString;
+      int dayOfMonth = int.parse(splits.elementAt(6).trim());
+      int year = DateTime.now().year;
+      String yearOrTime = splits.elementAt(7).trim();
+      int hour = 0;
+      int minute = 0;
+      if (yearOrTime.contains(':')) {
+        final timeSplits = yearOrTime.split(':');
+        hour = int.parse(timeSplits.elementAt(0));
+        minute = int.parse(timeSplits.elementAt(1));
+      } else {
+        year = int.parse(yearOrTime.trim());
+      }
+       log('${DateTime.now()}  year: ${year}',name: 'VERBOSE');
+      created = DateTime(
+          year, month ?? DateTime.now().month, dayOfMonth, hour, minute);
+    }
     name = splits.skip(isFileSystem ? 8 : 7).join(' ');
   }
 
