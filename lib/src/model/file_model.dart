@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_explorer/src/common/ext/string_ext.dart';
@@ -202,7 +201,6 @@ class FileModel {
       } else {
         year = int.parse(yearOrTime.trim());
       }
-       log('${DateTime.now()}  year: ${year}',name: 'VERBOSE');
       created = DateTime(
           year, month ?? DateTime.now().month, dayOfMonth, hour, minute);
     }

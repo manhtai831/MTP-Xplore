@@ -34,7 +34,9 @@ class _ApplicationState extends State<Application> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => WrapperProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => WrapperProvider()),
+      ],
       child: MaterialApp(
         navigatorKey: Application.navigatorKey,
         debugShowCheckedModeBanner: false,

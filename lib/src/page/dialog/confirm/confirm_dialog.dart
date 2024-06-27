@@ -1,4 +1,6 @@
 import 'package:device_explorer/src/common/base/provider_extension.dart';
+import 'package:device_explorer/src/common/translate/lang_key.dart';
+import 'package:device_explorer/src/common/translate/translate_ext.dart';
 import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +39,7 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
                       horizontal: 24,
                     ),
                     child: BaseText(
-                      title: 'Cancel',
+                      title: LangKey.cancel.tr,
                     ),
                   ),
                 ),
@@ -53,7 +55,7 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
                         horizontal: 32,
                       ),
                       child: BaseText(
-                        title: 'OK',
+                        title: LangKey.ok.tr,
                         color: Colors.white,
                       ),
                     ),

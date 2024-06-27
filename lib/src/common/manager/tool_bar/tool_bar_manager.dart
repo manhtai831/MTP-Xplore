@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:device_explorer/src/common/manager/tool_bar/select_mode.dart';
 import 'package:device_explorer/src/model/sort_model.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +14,6 @@ class ToolBarManager {
 
   SortModel? sort = SortModel(id: 3);
   bool showHiddenFile = false;
-  SelectMode selectMode = SelectMode.viewDetail;
 
   StreamSubscription<String> onListenOnReload(VoidCallback? onReload) {
     return _controller.stream.listen((_) {

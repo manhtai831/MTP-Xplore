@@ -1,9 +1,13 @@
-import 'package:device_explorer/src/common/base/base_provider.dart';
 import 'package:device_explorer/src/common/base/base_state.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/res/icon_path.dart';
 import 'package:device_explorer/src/common/route/route_path.dart';
+import 'package:device_explorer/src/common/translate/lang_code.dart';
+import 'package:device_explorer/src/common/translate/lang_key.dart';
+import 'package:device_explorer/src/common/translate/translate.dart';
+import 'package:device_explorer/src/common/translate/translate_ext.dart';
 import 'package:device_explorer/src/common/widgets/app_back_button.dart';
+import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:device_explorer/src/page/setting/setting_provider.dart';
 import 'package:device_explorer/src/page/setting/widget/item_setting.dart';
@@ -31,7 +35,7 @@ class _SettingPageState extends BaseState<SettingPage, SettingProvider> {
             onBackPressed: context.pop,
           ),
           title: BaseText.bold(
-            title: 'Settings',
+            title: LangKey.setting.tr,
           ),
         ),
         body: SingleChildScrollView(
@@ -40,14 +44,25 @@ class _SettingPageState extends BaseState<SettingPage, SettingProvider> {
               ItemSetting(
                 onPressed: () => context.push(RoutePath.storage),
                 icon: IconPath.storage,
-                title: 'Storage',
+                title: LangKey.storageSetting.tr,
               ),
               ItemSetting(
                 onPressed: () => context.push(RoutePath.fileSetting),
                 icon: IconPath.setting,
-                title: 'File Setting',
+                title: LangKey.fileSetting.tr,
               ),
-              SizedBox(
+              BaseButton(
+                onPressed: () {
+                  final lang = Translate().currentLang == LangCode.vi
+                      ? LangCode.en
+                      : LangCode.vi;
+                  Translate().switchLang(lang);
+                },
+                child: BaseText(
+                  title: 'Change Lang',
+                ),
+              ),
+              const SizedBox(
                 height: 24,
               ),
               Consumer<SettingProvider>(

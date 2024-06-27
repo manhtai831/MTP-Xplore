@@ -1,5 +1,7 @@
 
 import 'package:device_explorer/src/common/base/base_state.dart';
+import 'package:device_explorer/src/common/translate/lang_key.dart';
+import 'package:device_explorer/src/common/translate/translate_ext.dart';
 import 'package:device_explorer/src/model/tab_model.dart';
 import 'package:device_explorer/src/page/tab/tab_page.dart';
 import 'package:device_explorer/src/page/wrapper/widgets/add_tab_widget.dart';
@@ -44,8 +46,11 @@ class _WrapperPageState extends BaseState<WrapperPage, WrapperProvider> {
                     ),
                   ),
                 ),
-                AddTabWidget(
-                  onPressed: provider.addTab,
+                Tooltip(
+                  message: LangKey.addTab.tr,
+                  child: AddTabWidget(
+                    onPressed: provider.addTab,
+                  ),
                 ),
               ],
             ),

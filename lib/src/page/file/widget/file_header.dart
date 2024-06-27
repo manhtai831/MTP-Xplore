@@ -1,4 +1,6 @@
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
+import 'package:device_explorer/src/common/translate/lang_key.dart';
+import 'package:device_explorer/src/common/translate/translate_ext.dart';
 import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:device_explorer/src/model/sort_model.dart';
@@ -36,7 +38,7 @@ class _FileHeaderState extends State<FileHeader> {
                 child: StreamBuilder(
                   stream: ToolBarManager().toolBarStream,
                   builder: (_, __) => BaseText(
-                    title: 'Name',
+                    title: LangKey.name.tr,
                     fontWeight: ToolBarManager().sort?.isNameAToZ == true ||
                             ToolBarManager().sort?.isNameZToA == true
                         ? FontWeight.bold
@@ -58,7 +60,7 @@ class _FileHeaderState extends State<FileHeader> {
                   stream: ToolBarManager().toolBarStream,
                   builder: (context, snapshot) {
                     return BaseText(
-                      title: 'Length',
+                      title: LangKey.length.tr,
                       fontWeight: ToolBarManager().sort?.isByLengthIncrement ==
                                   true ||
                               ToolBarManager().sort?.isByLengthDecrement == true
@@ -80,7 +82,7 @@ class _FileHeaderState extends State<FileHeader> {
                   stream: ToolBarManager().toolBarStream,
                   builder: (context, snapshot) {
                     return BaseText(
-                      title: 'Type',
+                      title: LangKey.type.tr,
                       fontWeight: ToolBarManager().sort?.isByType == true
                           ? FontWeight.bold
                           : FontWeight.normal,
@@ -93,7 +95,7 @@ class _FileHeaderState extends State<FileHeader> {
             constraints: const BoxConstraints(minWidth: 56),
             alignment: Alignment.center,
             child: BaseText(
-              title: 'Size',
+              title: LangKey.size.tr,
             ),
           ),
           BaseButton(
@@ -111,7 +113,7 @@ class _FileHeaderState extends State<FileHeader> {
                   stream: ToolBarManager().toolBarStream,
                   builder: (context, snapshot) {
                     return BaseText(
-                      title: 'Modified',
+                      title: LangKey.modified.tr,
                       fontWeight: ToolBarManager().sort?.isDateAToZ == true ||
                               ToolBarManager().sort?.isDateZToA == true
                           ? FontWeight.bold

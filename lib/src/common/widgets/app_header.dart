@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/manager/clipboard/clipboard_manager.dart';
 import 'package:device_explorer/src/common/res/icon_path.dart';
 import 'package:device_explorer/src/common/route/route_path.dart';
+import 'package:device_explorer/src/common/translate/lang_key.dart';
+import 'package:device_explorer/src/common/translate/translate_ext.dart';
 import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:device_explorer/src/model/clipboard_data_model.dart';
@@ -65,16 +66,14 @@ class _AppHeaderState extends State<AppHeader> {
         duration: const Duration(milliseconds: 300),
         child: Row(
           children: [
-            Tooltip(
-                message: 'Back',
-                child: app_back.AppBackButton(
-                  onBackPressed: _onBackPressed,
-                )),
+            app_back.AppBackButton(
+              onBackPressed: _onBackPressed,
+            ),
             const SizedBox(
               width: 8,
             ),
             Tooltip(
-              message: 'Home',
+              message: LangKey.home.tr,
               child: BaseButton(
                 onPressed: _onGoHome,
                 child: Image.asset(
@@ -94,7 +93,7 @@ class _AppHeaderState extends State<AppHeader> {
               ),
             ),
             Tooltip(
-              message: 'New Folder (⌘ + N)',
+              message: LangKey.newFolder.tr,
               child: BaseButton(
                 onPressed: _onAddFolder,
                 child: Image.asset(
@@ -107,7 +106,7 @@ class _AppHeaderState extends State<AppHeader> {
               width: 12,
             ),
             Tooltip(
-              message: 'Edit Name (⌘ + D)',
+              message: LangKey.rename.tr,
               child: BaseButton(
                 onPressed: _onEditFileName,
                 child: Image.asset(
@@ -120,7 +119,7 @@ class _AppHeaderState extends State<AppHeader> {
               width: 12,
             ),
             Tooltip(
-              message: 'Delete (Backspace)',
+              message: LangKey.delete.tr,
               child: BaseButton(
                 onPressed: _onDelete,
                 child: Image.asset(
@@ -133,7 +132,7 @@ class _AppHeaderState extends State<AppHeader> {
               width: 12,
             ),
             Tooltip(
-              message: 'Copy (⌘ + C)',
+              message: LangKey.copy.tr,
               child: BaseButton(
                 onPressed: _onCopy,
                 child: Image.asset(
@@ -146,7 +145,7 @@ class _AppHeaderState extends State<AppHeader> {
               width: 12,
             ),
             Tooltip(
-              message: 'Paste (⌘ + V)',
+              message: LangKey.paste.tr,
               child: BaseButton(
                 onPressed: _onPaste,
                 child: Image.asset(
@@ -159,7 +158,7 @@ class _AppHeaderState extends State<AppHeader> {
               width: 12,
             ),
             Tooltip(
-              message: 'Sort',
+              message: LangKey.sort.tr,
               child: BaseButton(
                 onPressed: _onSort,
                 child: Image.asset(
@@ -172,7 +171,7 @@ class _AppHeaderState extends State<AppHeader> {
               width: 12,
             ),
             Tooltip(
-              message: 'Setting',
+              message: LangKey.setting.tr,
               child: BaseButton(
                 onPressed: _onSetting,
                 child: Image.asset(
@@ -185,10 +184,9 @@ class _AppHeaderState extends State<AppHeader> {
               width: 12,
             ),
             Tooltip(
-              message: 'Reload file (⌘ + R)',
+              message: LangKey.reload.tr,
               child: BaseButton(
                 onPressed: fileProvider.getFiles,
-                
                 child: Padding(
                   padding: const EdgeInsets.all(2),
                   child: Image.asset(
@@ -265,15 +263,14 @@ class _AppHeaderState extends State<AppHeader> {
 
     final result = await showDialog(
       context: Application.navigatorKey.currentContext!,
-      builder: (context) => const ConfirmDialog(
-        msg: 'Are you want to delete file/files?',
+      builder: (context) => ConfirmDialog(
+        msg: LangKey.confirmDelete.tr,
       ),
     );
     if (result != true) return;
     final device = tabProvider.tab.device;
     for (var it in fileProvider.filePicked) {
       if (it.path != null) {
-        log('${DateTime.now()}  it.path: ${it.path}', name: 'VERBOSE');
         await tabProvider.tab.repository.delete(
           filePath: it.path!,
           device: device,

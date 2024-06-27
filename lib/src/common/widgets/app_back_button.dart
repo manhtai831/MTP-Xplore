@@ -1,6 +1,8 @@
 import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/res/icon_path.dart';
+import 'package:device_explorer/src/common/translate/lang_key.dart';
+import 'package:device_explorer/src/common/translate/translate_ext.dart';
 import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +12,7 @@ class AppBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: 'Back',
+      message: LangKey.back.tr,
       child: BaseButton(
         onPressed: onBackPressed ?? _onBack,
         child: ClipRRect(

@@ -1,5 +1,7 @@
 import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
+import 'package:device_explorer/src/common/translate/lang_key.dart';
+import 'package:device_explorer/src/common/translate/translate_ext.dart';
 import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:device_explorer/src/model/setting_model.dart';
@@ -37,8 +39,8 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
             TextField(
               controller: _controller,
               autofocus: true,
-              decoration: const InputDecoration(
-                label: Text('New folder name'),
+              decoration: InputDecoration(
+                label: Text(LangKey.newFolderTitle.tr),
                 hintText: 'Eg: create/new/path',
               ),
               onSubmitted: (_) => _onUpdate(),
@@ -57,7 +59,7 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
                       vertical: 12,
                       horizontal: 24,
                     ),
-                    child: const Text('Cancel'),
+                    child: Text(LangKey.cancel.tr),
                   ),
                 ),
                 const SizedBox(
@@ -74,7 +76,7 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
                         horizontal: 32,
                       ),
                       child: BaseText(
-                        title: 'OK',
+                        title: LangKey.ok.tr,
                         color: Colors.white,
                       ),
                     ),
