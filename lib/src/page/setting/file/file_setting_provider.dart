@@ -8,6 +8,7 @@ class FileSettingProvider extends BaseProvider {
   void onChange(int i, bool v) {
     if (i == 1) {
       ToolBarManager().setShowHiddenFile(v);
+    
     }
   }
 }

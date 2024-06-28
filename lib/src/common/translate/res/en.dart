@@ -31,4 +31,5 @@ Map<String, String> en = {
   LangKey.newFolderTitle: 'Folder name',
   LangKey.newFileName: 'File name',
   LangKey.confirmDelete: 'Are you want to delete file/files?',
+  LangKey.languageSetting: 'Language',
 };

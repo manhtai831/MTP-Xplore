@@ -4,6 +4,7 @@ class LangKey {
   static const back = 'back';
   static const storageSetting = 'storageSetting';
   static const fileSetting = 'fileSetting';
+  static const languageSetting = 'languageSetting';
   static const setting = 'setting';
   static const home = 'home';
   static const newFolder = 'newFolder';

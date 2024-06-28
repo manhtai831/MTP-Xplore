@@ -21,6 +21,9 @@ class BaseButton extends StatelessWidget {
         child: MaterialButton(
           onPressed: onPressed,
           minWidth: 0,
+          focusNode: FocusNode(
+            skipTraversal: true,
+          ),
           padding: EdgeInsets.zero,
           height: 0,
           child: child,

@@ -2,13 +2,11 @@ import 'package:device_explorer/src/common/base/base_state.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/res/icon_path.dart';
 import 'package:device_explorer/src/common/route/route_path.dart';
-import 'package:device_explorer/src/common/translate/lang_code.dart';
 import 'package:device_explorer/src/common/translate/lang_key.dart';
-import 'package:device_explorer/src/common/translate/translate.dart';
 import 'package:device_explorer/src/common/translate/translate_ext.dart';
 import 'package:device_explorer/src/common/widgets/app_back_button.dart';
-import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
+import 'package:device_explorer/src/page/dialog/language/language_dialog.dart';
 import 'package:device_explorer/src/page/setting/setting_provider.dart';
 import 'package:device_explorer/src/page/setting/widget/item_setting.dart';
 import 'package:flutter/material.dart';
@@ -51,16 +49,13 @@ class _SettingPageState extends BaseState<SettingPage, SettingProvider> {
                 icon: IconPath.setting,
                 title: LangKey.fileSetting.tr,
               ),
-              BaseButton(
-                onPressed: () {
-                  final lang = Translate().currentLang == LangCode.vi
-                      ? LangCode.en
-                      : LangCode.vi;
-                  Translate().switchLang(lang);
-                },
-                child: BaseText(
-                  title: 'Change Lang',
+              ItemSetting(
+                onPressed: () => showDialog(
+                  builder: (context) => const LanguageDialog(),
+                  context: context,
                 ),
+                icon: IconPath.language,
+                title: LangKey.languageSetting.tr,
               ),
               const SizedBox(
                 height: 24,

@@ -30,5 +30,6 @@ Map<String, String> vi = {
   LangKey.cancel: 'Huỷ bỏ',
   LangKey.newFolderTitle: 'Tên thư mục',
   LangKey.newFileName: 'Tên tệp',
-  LangKey.confirmDelete: 'Bạn có chắc chắn muốn xoá thư mục/tệp này?'
+  LangKey.confirmDelete: 'Bạn có chắc chắn muốn xoá thư mục/tệp này?',
+  LangKey.languageSetting: 'Ngôn ngữ',
 };

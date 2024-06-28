@@ -1,5 +1,5 @@
 class SortModel {
-  int? id;
+  dynamic id;
   String? name;
   String? icon;
   bool? isSelected;

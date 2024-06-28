@@ -1,8 +1,6 @@
 import 'package:device_explorer/src/common/base/provider_extension.dart';
-import 'package:device_explorer/src/common/translate/lang_key.dart';
-import 'package:device_explorer/src/common/translate/translate_ext.dart';
-import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
+import 'package:device_explorer/src/common/widgets/buttons_dialog.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmDialog extends StatefulWidget {
@@ -27,49 +25,12 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
             const SizedBox(
               height: 16,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                BaseButton(
-                  onPressed: _onBack,
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 24,
-                    ),
-                    child: BaseText(
-                      title: LangKey.cancel.tr,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                BaseButton(
-                  onPressed: () => context.pop(args: true),
-                  borderRadius: BorderRadius.circular(8),
-                  child: Ink(
-                    color: Theme.of(context).primaryColor,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 32,
-                      ),
-                      child: BaseText(
-                        title: LangKey.ok.tr,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            )
+            ButtonsDialog(
+              onOke: () => context.pop(args: true),
+            ),
           ],
         ),
       ),
     );
-  }
-
-  void _onBack() {
-    context.pop(args: false);
   }
 }

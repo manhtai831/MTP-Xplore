@@ -1,24 +1,39 @@
-import 'dart:async';
-
-import 'package:flutter/material.dart';
-
 class SettingModel {
-  SettingModel._();
+  /// app setting sort
+  int? sortId;
 
-  static final SettingModel _singleton = SettingModel._();
+  bool? showHiddenFile;
 
-  factory SettingModel() => _singleton;
-  StreamController controller = StreamController.broadcast();
+  String? langCode;
+  SettingModel({
+    this.sortId,
+    this.showHiddenFile,
+    this.langCode,
+  });
 
-  RouteSettings? _settings;
-  set settings(RouteSettings? settings) {
-    bool mustSink = settings?.name != _settings?.name;
-    _settings = settings;
-
-    if (mustSink) {
-      controller.add('ok');
-    }
+  SettingModel.fromJson(Map<String, dynamic> json) {
+    sortId = json['sort_id']?.toInt() as int?;
+    showHiddenFile = json['show_hidden_file'] as bool?;
+    langCode = json['lang_code'] as String?;
   }
 
-  RouteSettings? get settings => _settings;
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'sort_id': sortId,
+      'show_hidden_file': showHiddenFile,
+      'lang_code': langCode,
+    };
+  }
+
+  SettingModel copyWith({
+    int? sortId,
+    bool? showHiddenFile,
+    String? langCode,
+  }) {
+    return SettingModel(
+      sortId: sortId ?? this.sortId,
+      showHiddenFile: showHiddenFile ?? this.showHiddenFile,
+      langCode: langCode ?? this.langCode,
+    );
+  }
 }

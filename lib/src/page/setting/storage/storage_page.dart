@@ -41,7 +41,7 @@ class _StoragePageState extends BaseState<StoragePage, StorageProvider> {
                     ),
                     BaseText(
                       title:
-                          'Current size: ${provider.dirStat?.sizeFile ?? '--'} ${provider.dirStat?.sizeText}',
+                          'Current size: ${provider.dirStat?.sizeFile ?? '--'}',
                     ),
                     BaseButton(
                       onPressed: provider.clearStorage,

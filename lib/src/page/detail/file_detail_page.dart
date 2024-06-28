@@ -37,6 +37,7 @@ class _FileDetailPageState
       value: provider,
       child: KeyboardListener(
         focusNode: _focusNode,
+        autofocus: true,
         onKeyEvent: provider.onKeyEvent,
         child: Scaffold(
           body: Stack(
@@ -134,5 +135,11 @@ class _FileDetailPageState
 
   void _onBackPressed() {
     context.pop(args: provider.controller.page?.toInt());
+  }
+
+  @override
+  void dispose() {
+    _focusNode.unfocus();
+    super.dispose();
   }
 }

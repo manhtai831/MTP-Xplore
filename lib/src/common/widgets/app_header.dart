@@ -1,25 +1,18 @@
-import 'dart:async';
-
 import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
-import 'package:device_explorer/src/common/manager/clipboard/clipboard_manager.dart';
 import 'package:device_explorer/src/common/res/icon_path.dart';
 import 'package:device_explorer/src/common/route/route_path.dart';
 import 'package:device_explorer/src/common/translate/lang_key.dart';
 import 'package:device_explorer/src/common/translate/translate_ext.dart';
 import 'package:device_explorer/src/common/widgets/base_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
-import 'package:device_explorer/src/model/clipboard_data_model.dart';
-import 'package:device_explorer/src/model/setting_model.dart';
-import 'package:device_explorer/src/page/dialog/confirm/confirm_dialog.dart';
-import 'package:device_explorer/src/page/dialog/create_folder/create_folder_dialog.dart';
-import 'package:device_explorer/src/page/dialog/file_editor/file_editor_dialog.dart';
-import 'package:device_explorer/src/page/dialog/pull_progress/pull_progress_dialog.dart';
+import 'package:device_explorer/src/model/route_setting_model.dart';
 import 'package:device_explorer/src/page/dialog/sort/sort_dialog.dart';
 import 'package:device_explorer/src/page/file/file_provider.dart';
 import 'package:device_explorer/src/page/tab/tab_provider.dart';
 import 'package:device_explorer/src/page/wrapper/wrapper_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'app_back_button.dart' as app_back;
@@ -51,7 +44,7 @@ class _AppHeaderState extends State<AppHeader> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<dynamic>(
-      stream: SettingModel().controller.stream,
+      stream: RouteSettingModel().controller.stream,
       builder: (_, __) => AnimatedContainer(
         key: containerKey,
         width: double.infinity,
@@ -87,15 +80,21 @@ class _AppHeaderState extends State<AppHeader> {
             ),
             Expanded(
               child: Consumer<WrapperProvider>(
-                builder: (_, __, ___) => BaseText(
-                  title: tabProvider.tab.directory?.path,
+                builder: (_, __, ___) => BaseButton(
+                  onPressed: _onCopyDir,
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: BaseText(
+                      title: tabProvider.tab.directory?.path,
+                    ),
+                  ),
                 ),
               ),
             ),
             Tooltip(
               message: LangKey.newFolder.tr,
               child: BaseButton(
-                onPressed: _onAddFolder,
+                onPressed: fileProvider.onAddFolder,
                 child: Image.asset(
                   IconPath.addFolder,
                   width: 32,
@@ -108,7 +107,7 @@ class _AppHeaderState extends State<AppHeader> {
             Tooltip(
               message: LangKey.rename.tr,
               child: BaseButton(
-                onPressed: _onEditFileName,
+                onPressed: fileProvider.onEditFileName,
                 child: Image.asset(
                   IconPath.editFile,
                   width: 32,
@@ -121,7 +120,7 @@ class _AppHeaderState extends State<AppHeader> {
             Tooltip(
               message: LangKey.delete.tr,
               child: BaseButton(
-                onPressed: _onDelete,
+                onPressed: fileProvider.onDelete,
                 child: Image.asset(
                   IconPath.deleteFile,
                   width: 32,
@@ -134,7 +133,7 @@ class _AppHeaderState extends State<AppHeader> {
             Tooltip(
               message: LangKey.copy.tr,
               child: BaseButton(
-                onPressed: _onCopy,
+                onPressed: fileProvider.onCopy,
                 child: Image.asset(
                   IconPath.copy,
                   width: 32,
@@ -147,7 +146,7 @@ class _AppHeaderState extends State<AppHeader> {
             Tooltip(
               message: LangKey.paste.tr,
               child: BaseButton(
-                onPressed: _onPaste,
+                onPressed: fileProvider.onPaste,
                 child: Image.asset(
                   IconPath.paste,
                   width: 32,
@@ -213,93 +212,9 @@ class _AppHeaderState extends State<AppHeader> {
     );
   }
 
-  Future<void> _onPaste() async {
-    final clipboard = ClipboardManager().data;
-    if (clipboard == null) return;
-    final currentProvider = fileProvider;
-    final targetTab = tabProvider.tab;
-    await targetTab.repository.onPaste(
-      data: clipboard,
-      targetTab: targetTab,
-    );
-    Application.showSnackBar('Pasted');
-    currentProvider.getFiles();
-  }
-
-  Future<void> _onCopy() async {
-    ClipboardManager().setData(ClipboardDataModel(
-        files: fileProvider.filePicked, tab: tabProvider.tab));
-    Application.showSnackBar('Copied');
-  }
-
-  Future<void> _onEditFileName() async {
-    if (fileProvider.filePicked.isEmpty) {
-      Application.showSnackBar('No such file selected');
-      return;
-    }
-    final result = await showDialog(
-      context: Application.navigatorKey.currentContext!,
-      builder: (context) => const FileEditorDialog(),
-      routeSettings: RouteSettings(
-          arguments: FileEditorDialogArgs(
-        file: fileProvider.filePicked.lastOrNull,
-        tab: tabProvider.tab,
-      )),
-    );
-    if (result != true) return;
-    fileProvider.getFiles();
-  }
-
   void _onGoHome() {
     wrapperProvider.updateDir(null);
     tabProvider.notify();
-  }
-
-  Future<void> _onDelete() async {
-    if (fileProvider.filePicked.isEmpty) {
-      Application.showSnackBar('No such file selected');
-      return;
-    }
-
-    final result = await showDialog(
-      context: Application.navigatorKey.currentContext!,
-      builder: (context) => ConfirmDialog(
-        msg: LangKey.confirmDelete.tr,
-      ),
-    );
-    if (result != true) return;
-    final device = tabProvider.tab.device;
-    for (var it in fileProvider.filePicked) {
-      if (it.path != null) {
-        await tabProvider.tab.repository.delete(
-          filePath: it.path!,
-          device: device,
-        );
-      }
-    }
-    Application.showSnackBar('Deleted');
-    fileProvider.getFiles();
-  }
-
-  Future<void> _onAddFolder() async {
-    final result = await showDialog(
-      context: Application.navigatorKey.currentContext!,
-      builder: (context) => const CreateFolderDialog(),
-      routeSettings: RouteSettings(
-        arguments: CreateFolderDialogArgs(
-          tab: tabProvider.tab,
-        ),
-      ),
-    );
-    if (result != true) return;
-    fileProvider.getFiles();
-  }
-
-  void _onDownloadDoubleTap() {
-    showDialog(
-      context: Application.navigatorKey.currentContext!,
-      builder: (context) => const PullProgressDialog(),
-    );
   }
 
   void _onBackPressed() {
@@ -307,5 +222,12 @@ class _AppHeaderState extends State<AppHeader> {
     wrapperProvider.updateDir(parent);
     if (parent == null) return;
     fileProvider.getFiles();
+  }
+
+  void _onCopyDir() {
+    final data = tabProvider.tab.directory?.path;
+    if (data == null) return;
+    Clipboard.setData(ClipboardData(text: data));
+    Application.showSnackBar('Path Copied.');
   }
 }

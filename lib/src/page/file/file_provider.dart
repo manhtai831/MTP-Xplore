@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_explorer/application.dart';
@@ -27,26 +26,25 @@ class FileProvider extends BaseProvider {
   List<FileModel> files = [];
   FilePageArgs? args;
   StreamSubscription<String>? _subscription;
-  String? path;
-  bool? isReload = false;
-
-  List<FileModel> filePicked = [];
+  ScrollController controller = ScrollController();
 
   TabProvider get tabProvider => context.read<TabProvider>();
   WrapperProvider get wrapperProvider => context.read<WrapperProvider>();
+
+  List<FileModel> get filePicked =>
+      files.where((it) => it.isSelected == true).toList();
 
   @override
   Future<void> init() async {
     args = getArguments();
     getFiles();
     _subscription = ToolBarManager().onListenOnReload(() {
-      isReload = true;
       getFiles();
     });
   }
 
   Future<void> getFiles() async {
-    path = tabProvider.tab.directory?.path;
+    final path = tabProvider.tab.directory?.path;
     final result = await tabProvider.tab.repository
         .getFiles(path: path, device: tabProvider.tab.device);
 
@@ -58,34 +56,31 @@ class FileProvider extends BaseProvider {
       it.joinPath(path!);
     }
     final sort = ToolBarManager().sort;
-    if (sort != null) {
-      if (sort.isByType) {
-        files.sort((a, b) =>
-            (a.ext?.toLowerCase() ?? '').compareTo(b.ext?.toLowerCase() ?? ''));
-      } else if (sort.isNameAToZ) {
-        files.sort((a, b) => (a.name?.toLowerCase() ?? '')
-            .compareTo(b.name?.toLowerCase() ?? ''));
-      } else if (sort.isNameZToA) {
-        files.sort((a, b) => (b.name?.toLowerCase() ?? '')
-            .compareTo(a.name?.toLowerCase() ?? ''));
-      } else if (sort.isDateAToZ) {
-        files.sort((a, b) => (a.created ?? DateTime.now())
-            .compareTo(b.created ?? DateTime.now()));
-      } else if (sort.isDateZToA) {
-        files.sort((a, b) => (b.created ?? DateTime.now())
-            .compareTo(a.created ?? DateTime.now()));
-      } else if (sort.isByLengthIncrement) {
-        files.sort((a, b) => (a.size ?? 0).compareTo(b.size ?? 0));
-      } else if (sort.isByLengthDecrement) {
-        files.sort((a, b) => (b.size ?? 0).compareTo(a.size ?? 0));
-      }
+    if (sort.isByType) {
+      files.sort((a, b) =>
+          (a.ext?.toLowerCase() ?? '').compareTo(b.ext?.toLowerCase() ?? ''));
+    } else if (sort.isNameAToZ) {
+      files.sort((a, b) => (a.name?.toLowerCase() ?? '')
+          .compareTo(b.name?.toLowerCase() ?? ''));
+    } else if (sort.isNameZToA) {
+      files.sort((a, b) => (b.name?.toLowerCase() ?? '')
+          .compareTo(a.name?.toLowerCase() ?? ''));
+    } else if (sort.isDateAToZ) {
+      files.sort((a, b) => (a.created ?? DateTime.now())
+          .compareTo(b.created ?? DateTime.now()));
+    } else if (sort.isDateZToA) {
+      files.sort((a, b) => (b.created ?? DateTime.now())
+          .compareTo(a.created ?? DateTime.now()));
+    } else if (sort.isByLengthIncrement) {
+      files.sort((a, b) => (a.size ?? 0).compareTo(b.size ?? 0));
+    } else if (sort.isByLengthDecrement) {
+      files.sort((a, b) => (b.size ?? 0).compareTo(a.size ?? 0));
     }
-    final backItems = files.where((it) => it.isBack).toList();
+      final backItems = files.where((it) => it.isBack).toList();
 
     files.removeWhere((it) => it.isBack);
     files.insertAll(0, backItems);
     notify();
-    isReload = false;
   }
 
   Future<void> onPressed(FileModel file, int index) async {
@@ -111,7 +106,7 @@ class FileProvider extends BaseProvider {
       }
       file.isSelected = !file.isSelected;
     }
-    filePicked = files.where((it) => it.isSelected == true).toList();
+
     notify();
     return;
   }
@@ -148,14 +143,17 @@ class FileProvider extends BaseProvider {
         if (wrapperProvider.currentTab.directory?.path == null) return;
         if (file.path == null) return;
         final zipFile = File(file.path!);
+        final extractName =
+            '${file.getNameWithoutExt()}_${DateTime.now().millisecondsSinceEpoch}';
         Directory destinationDir = Directory(
-            '${wrapperProvider.currentTab.directory!.path!}/${file.getNameWithoutExt()}_${DateTime.now().millisecondsSinceEpoch}');
+            '${wrapperProvider.currentTab.directory!.path!}/$extractName');
         try {
           await ZipFile.extractToDirectory(
             zipFile: zipFile,
             destinationDir: destinationDir,
           );
-          getFiles();
+          await getFiles();
+          focusAndScroll(extractName);
           Application.showSnackBar('Extracted to: ${destinationDir.path}');
         } catch (e) {
           Application.showSnackBar(e.toString());
@@ -163,16 +161,19 @@ class FileProvider extends BaseProvider {
       }
     } else {
       int currentSelected = files.indexOf(file);
+      tabProvider.tab.focusNode.unfocus();
       final result = await context.push(
         RoutePath.fileDetail,
         args: FileDetailPageArgs(files: files, initIndex: currentSelected),
       );
+      tabProvider.tab.focusNode.requestFocus();
       if (result == null) return;
 
-      files.elementAt(result).isSelected = true;
+      focusAndScroll(
+        files.elementAt(result).name,
+      );
       notify();
     }
-    filePicked = files.where((it) => it.isSelected == true).toList();
   }
 
   Future<void> onKeyEvent(KeyEvent value) async {
@@ -204,59 +205,19 @@ class FileProvider extends BaseProvider {
       for (var it in files) {
         it.isSelected = true;
       }
-      filePicked = files;
       notify();
       // Delete
     } else if (isDeletePressed) {
-      if (filePicked.isEmpty) return;
-      final result = await showDialog(
-        context: Application.navigatorKey.currentContext!,
-        builder: (context) => const ConfirmDialog(
-          msg: 'Are you want to delete file/files?',
-        ),
-      );
-      if (result != true) return;
-      for (var it in filePicked) {
-        if (it.path != null) {
-          await tabProvider.tab.repository.delete(
-            filePath: it.path!,
-            device: tabProvider.tab.device,
-          );
-        }
-      }
-      Application.showSnackBar('Deleted');
-      getFiles();
+      onDelete();
       // Command + N
     } else if (isMetaPressed && isNPressed) {
-      final result = await showDialog(
-        context: Application.navigatorKey.currentContext!,
-        builder: (context) => const CreateFolderDialog(),
-        routeSettings: RouteSettings(
-          arguments: CreateFolderDialogArgs(
-            tab: tabProvider.tab,
-          ),
-        ),
-      );
-      if (result != true) return;
-      getFiles();
+      onAddFolder();
       // Command + R
     } else if (isMetaPressed && isRPressed) {
       ToolBarManager().onReload();
       // Command + D
     } else if (isMetaPressed && isDPressed) {
-      if (filePicked.isEmpty) return;
-      final result = await showDialog(
-        context: Application.navigatorKey.currentContext!,
-        builder: (context) => const FileEditorDialog(),
-        routeSettings: RouteSettings(
-            arguments: FileEditorDialogArgs(
-          file: filePicked.lastOrNull,
-          tab: tabProvider.tab,
-        )),
-      );
-      if(result != true) return;
-      getFiles();
-      // Enter
+      onEditFileName(); // Enter
     } else if (isEnterPressed) {
       if (filePicked.isEmpty) return;
       onDoublePressed(filePicked.first, files.indexOf(filePicked.first));
@@ -272,7 +233,7 @@ class FileProvider extends BaseProvider {
         it.isSelected = false;
       }
       files.elementAt(index).isSelected = true;
-      filePicked = files.where((it) => it.isSelected == true).toList();
+      scrollToIndex(index);
       notify();
       // Arrow down
     } else if (isArrowDownPressed) {
@@ -286,28 +247,110 @@ class FileProvider extends BaseProvider {
         it.isSelected = false;
       }
       files.elementAt(index).isSelected = true;
-      filePicked = files.where((it) => it.isSelected == true).toList();
+      scrollToIndex(index);
       notify();
     } else if (isMetaPressed && isCPressed) {
-      log('${DateTime.now()}  filePicked: ${filePicked.length}',
-          name: 'VERBOSE');
-      ClipboardManager().setData(
-        ClipboardDataModel(
-          files: filePicked,
+      onCopy();
+    } else if (isMetaPressed && isVPressed) {
+      onPaste();
+    }
+  }
+
+  Future<void> onDelete() async {
+    if (filePicked.isEmpty) {
+      Application.showSnackBar('No such file selected');
+      return;
+    }
+
+    final result = await showDialog(
+      context: Application.navigatorKey.currentContext!,
+      builder: (context) => const ConfirmDialog(
+        msg: 'Are you want to delete file/files?',
+      ),
+    );
+    if (result != true) return;
+    for (var it in filePicked) {
+      if (it.path != null) {
+        await tabProvider.tab.repository.delete(
+          filePath: it.path!,
+          device: tabProvider.tab.device,
+        );
+      }
+    }
+    Application.showSnackBar('Deleted');
+    getFiles();
+  }
+
+  Future<void> onAddFolder() async {
+    final result = await showDialog(
+      context: Application.navigatorKey.currentContext!,
+      builder: (context) => const CreateFolderDialog(),
+      routeSettings: RouteSettings(
+        arguments: CreateFolderDialogArgs(
           tab: tabProvider.tab,
         ),
-      );
-      Application.showSnackBar('Copied');
-    } else if (isMetaPressed && isVPressed) {
-      log('${DateTime.now()}  ClipboardManager().data: ${ClipboardManager().data}',
-          name: 'VERBOSE');
-      if (ClipboardManager().data == null) return;
-      await tabProvider.tab.repository.onPaste(
-        data: ClipboardManager().data!,
-        targetTab: tabProvider.tab,
-      );
-      Application.showSnackBar('Pasted');
-      getFiles();
+      ),
+    );
+    if (result != true) return;
+    getFiles();
+  }
+
+  Future<void> onEditFileName() async {
+    if (filePicked.isEmpty) return;
+    final result = await showDialog(
+      context: Application.navigatorKey.currentContext!,
+      builder: (context) => const FileEditorDialog(),
+      routeSettings: RouteSettings(
+          arguments: FileEditorDialogArgs(
+        file: filePicked.lastOrNull,
+        tab: tabProvider.tab,
+      )),
+    );
+    if (result != true) return;
+    getFiles();
+  }
+
+  void onCopy() {
+    if(filePicked.isEmpty) return;
+    ClipboardManager().setData(
+      ClipboardDataModel(
+        files: filePicked,
+        tab: tabProvider.tab,
+      ),
+    );
+    Application.showSnackBar('Copied');
+  }
+
+  Future<void> onPaste() async {
+    if (ClipboardManager().data == null) return;
+    await tabProvider.tab.repository.onPaste(
+      data: ClipboardManager().data!,
+      targetTab: tabProvider.tab,
+    );
+    Application.showSnackBar('Pasted');
+    await getFiles();
+    final lastFileName = ClipboardManager().data?.files.last.name;
+    focusAndScroll(lastFileName);
+    notify();
+  }
+
+  void scrollToIndex(int index) {
+    double target = index * 50;
+    if (target >= controller.position.maxScrollExtent) {
+      target = controller.position.maxScrollExtent;
     }
+    controller.animateTo(target,
+        duration: const Duration(microseconds: 500), curve: Curves.linear);
+  }
+
+  void focusAndScroll(String? fileName) {
+    if (fileName == null) return;
+    final highlightFileIndex = files.indexWhere((it) => it.name == fileName);
+    if (highlightFileIndex == -1) return;
+    scrollToIndex(highlightFileIndex);
+    for (var it in files) {
+      it.isSelected = false;
+    }
+    files.elementAtOrNull(highlightFileIndex)?.isSelected = true;
   }
 }

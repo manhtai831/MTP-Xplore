@@ -34,11 +34,11 @@ class _FilePageState extends BaseState<FilePage, FileProvider> {
           child: Column(
             children: [
               const AppHeader(),
-              
               const FileHeader(),
               Expanded(
                 child: Consumer<FileProvider>(
                   builder: (_, p, v) => ListView.builder(
+                    controller: provider.controller,
                     itemBuilder: _itemBuilder,
                     itemCount: provider.files.length,
                   ),

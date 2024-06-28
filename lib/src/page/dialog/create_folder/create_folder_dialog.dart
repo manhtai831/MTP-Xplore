@@ -2,9 +2,8 @@ import 'package:device_explorer/application.dart';
 import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/translate/lang_key.dart';
 import 'package:device_explorer/src/common/translate/translate_ext.dart';
-import 'package:device_explorer/src/common/widgets/base_button.dart';
-import 'package:device_explorer/src/common/widgets/base_text.dart';
-import 'package:device_explorer/src/model/setting_model.dart';
+import 'package:device_explorer/src/common/widgets/buttons_dialog.dart';
+import 'package:device_explorer/src/model/route_setting_model.dart';
 import 'package:device_explorer/src/model/tab_model.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +25,7 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
   final TextEditingController _controller = TextEditingController();
 
   CreateFolderDialogArgs get args =>
-      SettingModel().settings?.arguments as CreateFolderDialogArgs;
+      RouteSettingModel().settings?.arguments as CreateFolderDialogArgs;
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -48,51 +47,15 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
             const SizedBox(
               height: 16,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                BaseButton(
-                  borderRadius: BorderRadius.circular(8),
-                  onPressed: _onCancel,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 24,
-                    ),
-                    child: Text(LangKey.cancel.tr),
-                  ),
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                BaseButton(
-                  borderRadius: BorderRadius.circular(8),
-                  onPressed: _onUpdate,
-                  child: Ink(
-                    color: Theme.of(context).primaryColor,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 32,
-                      ),
-                      child: BaseText(
-                        title: LangKey.ok.tr,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            )
+              ButtonsDialog(
+              onOke: _onUpdate,
+            ),
           ],
         ),
       ),
     );
   }
 
-  void _onCancel() {
-    context.pop();
-  }
 
   Future<void> _onUpdate() async {
     if (args.tab?.directory?.path == null) {

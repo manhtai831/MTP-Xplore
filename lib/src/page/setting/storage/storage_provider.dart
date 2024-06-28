@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:device_explorer/src/common/base/base_provider.dart';
+import 'package:device_explorer/src/common/manager/setting/setting_manager.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/page/dialog/confirm/confirm_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
 class StorageProvider extends BaseProvider {
   FileModel? dirStat;
@@ -16,7 +16,7 @@ class StorageProvider extends BaseProvider {
   }
 
   Future<void> getCurrentSize() async {
-    final dir = await getApplicationSupportDirectory();
+    final dir = SettingManager().tmpDir;
     currentPath = dir.path;
     double currentSize = 0;
     List<FileSystemEntity> fileSystem = dir.listSync();

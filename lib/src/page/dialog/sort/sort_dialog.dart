@@ -1,3 +1,4 @@
+import 'package:device_explorer/src/common/manager/setting/setting_manager.dart';
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
 import 'package:device_explorer/src/common/res/icon_path.dart';
 import 'package:device_explorer/src/common/translate/lang_key.dart';
@@ -22,16 +23,15 @@ class _SortDialogState extends State<SortDialog> {
     SortModel(id: 3, icon: IconPath.sort, name: LangKey.sortType.tr),
     SortModel(id: 4, icon: IconPath.date, name: LangKey.dateA2Z.tr),
     SortModel(id: 5, icon: IconPath.date, name: LangKey.dateZ2A.tr),
-    SortModel(id: 6, icon: IconPath.date, name: LangKey.lengthA2Z.tr),
-    SortModel(id: 7, icon: IconPath.date, name: LangKey.dateZ2A.tr),
+    SortModel(id: 6, icon: IconPath.storage, name: LangKey.lengthA2Z.tr),
+    SortModel(id: 7, icon: IconPath.storage, name: LangKey.lengthZ2A.tr),
   ];
   SortModel? current;
 
   @override
   void initState() {
     super.initState();
-    current =
-        sorts.firstWhereOrNull((it) => ToolBarManager().sort?.id == it.id);
+    current = sorts.firstWhereOrNull((it) => ToolBarManager().sort.id == it.id);
   }
 
   @override
@@ -60,5 +60,8 @@ class _SortDialogState extends State<SortDialog> {
     current = it;
     setState(() {});
     ToolBarManager().setSort(it);
+    SettingManager().updateSetting(
+      SettingManager().settings.copyWith(sortId: it.id),
+    );
   }
 }

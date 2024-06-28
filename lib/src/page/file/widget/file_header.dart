@@ -39,8 +39,8 @@ class _FileHeaderState extends State<FileHeader> {
                   stream: ToolBarManager().toolBarStream,
                   builder: (_, __) => BaseText(
                     title: LangKey.name.tr,
-                    fontWeight: ToolBarManager().sort?.isNameAToZ == true ||
-                            ToolBarManager().sort?.isNameZToA == true
+                    fontWeight: ToolBarManager().sort.isNameAToZ == true ||
+                            ToolBarManager().sort.isNameZToA == true
                         ? FontWeight.bold
                         : FontWeight.normal,
                   ),
@@ -61,9 +61,9 @@ class _FileHeaderState extends State<FileHeader> {
                   builder: (context, snapshot) {
                     return BaseText(
                       title: LangKey.length.tr,
-                      fontWeight: ToolBarManager().sort?.isByLengthIncrement ==
+                      fontWeight: ToolBarManager().sort.isByLengthIncrement ==
                                   true ||
-                              ToolBarManager().sort?.isByLengthDecrement == true
+                              ToolBarManager().sort.isByLengthDecrement == true
                           ? FontWeight.bold
                           : FontWeight.normal,
                     );
@@ -83,7 +83,7 @@ class _FileHeaderState extends State<FileHeader> {
                   builder: (context, snapshot) {
                     return BaseText(
                       title: LangKey.type.tr,
-                      fontWeight: ToolBarManager().sort?.isByType == true
+                      fontWeight: ToolBarManager().sort.isByType == true
                           ? FontWeight.bold
                           : FontWeight.normal,
                     );
@@ -114,8 +114,8 @@ class _FileHeaderState extends State<FileHeader> {
                   builder: (context, snapshot) {
                     return BaseText(
                       title: LangKey.modified.tr,
-                      fontWeight: ToolBarManager().sort?.isDateAToZ == true ||
-                              ToolBarManager().sort?.isDateZToA == true
+                      fontWeight: ToolBarManager().sort.isDateAToZ == true ||
+                              ToolBarManager().sort.isDateZToA == true
                           ? FontWeight.bold
                           : FontWeight.normal,
                     );
@@ -129,16 +129,18 @@ class _FileHeaderState extends State<FileHeader> {
 
   void _onFilterName() {
     final currentSort = ToolBarManager().sort;
-    if (currentSort?.isNameAToZ == true) {
-      return ToolBarManager().setSort(SortModel(id: 2));
+    if (currentSort.isNameAToZ == true) {
+      ToolBarManager().setSort(SortModel(id: 2));
+      return;
     }
     ToolBarManager().setSort(SortModel(id: 1));
   }
 
   void _onFilterByLength() {
     final currentSort = ToolBarManager().sort;
-    if (currentSort?.isByLengthIncrement == true) {
-      return ToolBarManager().setSort(SortModel(id: 7));
+    if (currentSort.isByLengthIncrement == true) {
+      ToolBarManager().setSort(SortModel(id: 7));
+      return;
     }
     ToolBarManager().setSort(SortModel(id: 6));
   }
@@ -149,8 +151,9 @@ class _FileHeaderState extends State<FileHeader> {
 
   void _onFilterByModified() {
     final currentSort = ToolBarManager().sort;
-    if (currentSort?.isDateAToZ == true) {
-      return ToolBarManager().setSort(SortModel(id: 5));
+    if (currentSort.isDateAToZ == true) {
+      ToolBarManager().setSort(SortModel(id: 5));
+      return;
     }
     ToolBarManager().setSort(SortModel(id: 4));
   }
