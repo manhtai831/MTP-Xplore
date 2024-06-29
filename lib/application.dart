@@ -80,5 +80,3 @@ Route? _onGenerateRoute(RouteSettings settings) {
     settings: settings,
   );
 }
-
-extension ApplicationExt on Application {}

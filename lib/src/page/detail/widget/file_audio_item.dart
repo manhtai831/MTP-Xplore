@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:device_explorer/src/common/ext/duration_ext.dart';
 import 'package:device_explorer/src/common/widgets/base_button.dart';
@@ -31,7 +30,6 @@ class _FileAudioItemState extends State<FileAudioItem> {
     final path = await widget.file?.getViewPath(device: wrapperProvider.currentTab.device);
     if (path == null) return;
     totalDuration = await player.setFilePath(path);
-    log('${DateTime.now()}  totalDuration: $totalDuration', name: 'VERBOSE');
     player.play();
     setState(() {});
   }

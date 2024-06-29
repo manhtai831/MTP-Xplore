@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:chewie/chewie.dart';
@@ -26,7 +25,6 @@ class _FileVideoItemState extends State<FileVideoItem> {
 
   void init() async {
     String? path = await widget.file?.getViewPath(device: wrapperProvider.currentTab.device);
-    log('${DateTime.now()}  path: $path', name: 'VERBOSE');
     if (path == null) return;
     final file = File(path);
     if (file.statSync().size == 0) {

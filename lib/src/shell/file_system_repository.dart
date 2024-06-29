@@ -8,7 +8,7 @@ import 'package:device_explorer/src/model/clipboard_data_model.dart';
 import 'package:device_explorer/src/model/device_model.dart';
 import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/model/tab_model.dart';
-import 'package:device_explorer/src/shell/file_manager.dart';
+import 'package:device_explorer/src/shell/file_mtp_repository.dart';
 import 'package:device_explorer/src/shell/i_file_manager.dart';
 
 class FileSystemRepository implements IFileManager {
@@ -105,7 +105,7 @@ class FileSystemRepository implements IFileManager {
       // to computer
       if (targetDevice?.isSystem == true) {
         for (var it in data.files) {
-          await FileManager().pull(
+          await FileMtpRepository().pull(
             device: fromDevice,
             filePath: it.isDir ? '${it.path}' : '${it.path}',
             toPath: targetPath,

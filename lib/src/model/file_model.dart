@@ -4,7 +4,7 @@ import 'package:device_explorer/src/common/ext/string_ext.dart';
 import 'package:device_explorer/src/common/manager/setting/setting_manager.dart';
 import 'package:device_explorer/src/common/res/icon_path.dart';
 import 'package:device_explorer/src/model/device_model.dart';
-import 'package:device_explorer/src/shell/file_manager.dart';
+import 'package:device_explorer/src/shell/file_mtp_repository.dart';
 
 class FileModel {
   String? permission;
@@ -167,7 +167,7 @@ class FileModel {
     if (File(path!).existsSync()) {
       return path;
     }
-    final result = await FileManager().pull(
+    final result = await FileMtpRepository().pull(
       filePath: this.path ?? '',
       fileInfo: this,
       device: device,

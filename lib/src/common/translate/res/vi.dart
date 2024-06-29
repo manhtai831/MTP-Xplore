@@ -32,4 +32,5 @@ Map<String, String> vi = {
   LangKey.newFileName: 'Tên tệp',
   LangKey.confirmDelete: 'Bạn có chắc chắn muốn xoá thư mục/tệp này?',
   LangKey.languageSetting: 'Ngôn ngữ',
+  LangKey.showHiddenFile: 'Hiển thị file ẩn',
 };

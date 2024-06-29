@@ -32,4 +32,5 @@ Map<String, String> en = {
   LangKey.newFileName: 'File name',
   LangKey.confirmDelete: 'Are you want to delete file/files?',
   LangKey.languageSetting: 'Language',
+  LangKey.showHiddenFile: 'Show hidden files',
 };

@@ -13,17 +13,17 @@ import 'package:device_explorer/src/model/file_model.dart';
 import 'package:device_explorer/src/model/progress_model.dart';
 import 'package:device_explorer/src/model/tab_model.dart';
 import 'package:device_explorer/src/shell/i_file_manager.dart';
-import 'package:device_explorer/src/shell/shell_manager.dart';
+import 'package:device_explorer/src/common/manager/shell/shell_manager.dart';
 import 'package:path_provider/path_provider.dart';
 
 typedef FutureCallBack = Future<BaseResponse<String>> Function();
 
-class FileManager implements IFileManager {
-  FileManager._();
+class FileMtpRepository implements IFileManager {
+  FileMtpRepository._();
 
-  static final FileManager _singleton = FileManager._();
+  static final FileMtpRepository _singleton = FileMtpRepository._();
 
-  factory FileManager() => _singleton;
+  factory FileMtpRepository() => _singleton;
 
   final pullQueue = Queue<FutureCallBack>();
   final pushQueue = Queue<FutureCallBack>();

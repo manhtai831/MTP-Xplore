@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:device_explorer/src/common/base/base_provider.dart';
-import 'package:device_explorer/src/shell/file_manager.dart';
+import 'package:device_explorer/src/shell/file_mtp_repository.dart';
 
 class PullProgressProvider extends BaseProvider {
   StreamSubscription? _subscription;
@@ -9,7 +9,8 @@ class PullProgressProvider extends BaseProvider {
   dynamic /* BaseResponse | ProgressModel */ currentPull;
   @override
   Future<void> init() async {
-    _subscription = FileManager().pullController.stream.listen(_pullListener);
+    _subscription =
+        FileMtpRepository().pullController.stream.listen(_pullListener);
   }
 
   void _pullListener(event) {
@@ -18,8 +19,8 @@ class PullProgressProvider extends BaseProvider {
   }
 
   @override
-  void dispose() {
+  void destroy() {
     _subscription?.cancel();
-    super.dispose();
+    super.destroy();
   }
 }

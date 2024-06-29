@@ -34,4 +34,5 @@ class LangKey {
   static const newFolderTitle = 'newFolderTitle';
   static const newFileName = 'newFileName';
   static const confirmDelete = 'confirmDelete';
+  static const showHiddenFile = 'showHiddenFile';
 }

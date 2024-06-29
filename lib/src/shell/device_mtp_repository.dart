@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:device_explorer/src/model/base_response.dart';
 import 'package:device_explorer/src/model/device_model.dart';
-import 'package:device_explorer/src/shell/shell_manager.dart';
+import 'package:device_explorer/src/common/manager/shell/shell_manager.dart';
 
-class DeviceManager {
-  DeviceManager._();
+class DeviceMtpRepository {
+  DeviceMtpRepository._();
 
-  static final DeviceManager _singleton = DeviceManager._();
+  static final DeviceMtpRepository _singleton = DeviceMtpRepository._();
 
-  factory DeviceManager() => _singleton;
+  factory DeviceMtpRepository() => _singleton;
 
   DeviceModel? current;
 

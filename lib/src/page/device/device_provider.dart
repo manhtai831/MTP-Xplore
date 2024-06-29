@@ -5,7 +5,7 @@ import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dar
 import 'package:device_explorer/src/common/res/audio_path.dart';
 import 'package:device_explorer/src/model/device_model.dart';
 import 'package:device_explorer/src/page/tab/tab_provider.dart';
-import 'package:device_explorer/src/shell/device_manager.dart';
+import 'package:device_explorer/src/shell/device_mtp_repository.dart';
 import 'package:device_explorer/src/shell/file_system_repository.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
@@ -42,22 +42,12 @@ class DeviceProvider extends BaseProvider {
     _subscription = ToolBarManager().onListenOnReload(getDevices);
     getDevices();
     _timer = Timer.periodic(const Duration(seconds: 10), (_) => getDevices());
-    // final dir = await getApplicationSupportDirectory();
-    // final data = await rootBundle.load('assets/ezyzip.zip');
-    // final file = File.fromRawPath(Uint8List.sublistView(data));
-    // File('${dir.path}/zipdata.zip').createSync();
-    // File('${dir.path}/zipdata.zip').writeAsBytesSync(data.buffer.asUint8List());
-    // final inputStream = InputFileStream('assets/platform-tools.zip');
-// Decode the zip from the InputFileStream. The archive will have the contents of the
-// zip, without having stored the data in memory.
-    // final archive = ZipDecoder().decodeBuffer(inputStream);
-    // extractArchiveToDisk(archive, dir.path);
   }
 
   Future<void> getDevices() async {
     final prev = devices;
     devices.clear();
-    final mDevices = await DeviceManager().getDevices();
+    final mDevices = await DeviceMtpRepository().getDevices();
     devices.addAll(mDevices.data ?? []);
 
     if (devices.isNotEmpty) {
@@ -66,7 +56,6 @@ class DeviceProvider extends BaseProvider {
         player.setVolume(1);
         await player.setAsset(AudioPath.deviceConnect);
         await player.play();
-        // player.dispose();
       }
     }
     devices.addAll(systemStorages);

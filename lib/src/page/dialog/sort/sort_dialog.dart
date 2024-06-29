@@ -56,7 +56,7 @@ class _SortDialogState extends State<SortDialog> {
     );
   }
 
-  onChange(SortModel it) {
+  void onChange(SortModel it) {
     current = it;
     setState(() {});
     ToolBarManager().setSort(it);

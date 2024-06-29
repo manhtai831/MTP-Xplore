@@ -1,5 +1,7 @@
 import 'package:device_explorer/src/common/base/base_state.dart';
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
+import 'package:device_explorer/src/common/translate/lang_key.dart';
+import 'package:device_explorer/src/common/translate/translate_ext.dart';
 import 'package:device_explorer/src/common/widgets/app_back_button.dart';
 import 'package:device_explorer/src/common/widgets/base_text.dart';
 import 'package:device_explorer/src/page/setting/file/file_setting_provider.dart';
@@ -33,7 +35,7 @@ class _FileSettingPageState
           child: Column(
             children: [
               CheckSettingItem(
-                title: 'Show hidden file',
+                title: LangKey.showHiddenFile.tr,
                 defaultCheck: ToolBarManager().showHiddenFile,
                 onChange: (v) => provider.onChange(1, v),
               ),
