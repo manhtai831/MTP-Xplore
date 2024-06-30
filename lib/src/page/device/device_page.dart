@@ -1,4 +1,7 @@
 import 'package:device_explorer/src/common/base/base_state.dart';
+import 'package:device_explorer/src/common/res/icon_path.dart';
+import 'package:device_explorer/src/common/translate/lang_key.dart';
+import 'package:device_explorer/src/common/translate/translate_ext.dart';
 import 'package:device_explorer/src/model/device_model.dart';
 import 'package:device_explorer/src/page/device/device_provider.dart';
 import 'package:device_explorer/src/page/device/widgets/device_item.dart';
@@ -21,7 +24,14 @@ class _DevicePageState extends BaseState<DevicePage, DeviceProvider> {
         body: Consumer<DeviceProvider>(
           builder: (_, p, v) => Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[...provider.devices.map(_buildItem)],
+            children: <Widget>[
+              ...provider.devices.map(_buildItem),
+              DeviceItem(
+                icon: IconPath.setting,
+                device: DeviceModel(model: LangKey.setting.tr),
+                onPressed: provider.onSettingPressed,
+              ),
+            ],
           ),
         ),
       ),
@@ -34,7 +44,7 @@ class _DevicePageState extends BaseState<DevicePage, DeviceProvider> {
   Widget _buildItem(DeviceModel e) {
     return DeviceItem(
       device: e,
-      onPressed: ()=> provider.onItemPressed(e),
+      onPressed: () => provider.onItemPressed(e),
     );
   }
 }

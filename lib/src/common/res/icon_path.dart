@@ -32,4 +32,5 @@ class IconPath {
   static const String language = 'assets/images/icons8-language-48.png';
   static const String usa = 'assets/images/icons8-usa-48.png';
   static const String vietNam = 'assets/images/icons8-vietnam-48.png';
+  static const String tools = 'assets/images/icons8-tools-48.png';
 }

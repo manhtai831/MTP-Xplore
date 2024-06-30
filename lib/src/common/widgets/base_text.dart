@@ -9,6 +9,7 @@ class BaseText extends StatelessWidget {
   TextOverflow? overflow;
   int? maxLines;
   TextAlign? textAlign;
+  FontStyle? fontStyle;
 
   BaseText({
     super.key,
@@ -19,8 +20,9 @@ class BaseText extends StatelessWidget {
     this.overflow,
     this.maxLines,
     this.textAlign,
+    this.fontStyle,
   });
-  
+
   BaseText.bold({
     super.key,
     this.fontSize = 14,
@@ -30,6 +32,7 @@ class BaseText extends StatelessWidget {
     this.overflow,
     this.maxLines,
     this.textAlign,
+    this.fontStyle,
   });
 
   @override
@@ -43,7 +46,7 @@ class BaseText extends StatelessWidget {
             fontSize: fontSize,
             fontWeight: fontWeight,
             color: color,
-            
+            fontStyle: fontStyle,
           ),
     );
   }

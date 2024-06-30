@@ -5,8 +5,9 @@ import 'package:device_explorer/src/model/device_model.dart';
 import 'package:flutter/material.dart';
 
 class DeviceItem extends StatelessWidget {
-  const DeviceItem({super.key, this.device, this.onPressed});
+  const DeviceItem({super.key, this.device, this.onPressed, this.icon});
   final DeviceModel? device;
+  final String? icon;
   final VoidCallback? onPressed;
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,8 @@ class DeviceItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
-              device?.isSystem == true ? IconPath.disk : IconPath.device,
+              icon ??
+                  (device?.isSystem == true ? IconPath.disk : IconPath.device),
               width: 48,
             ),
             BaseText.bold(

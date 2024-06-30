@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:device_explorer/src/common/base/base_provider.dart';
+import 'package:device_explorer/src/common/base/provider_extension.dart';
 import 'package:device_explorer/src/common/manager/tool_bar/tool_bar_manager.dart';
 import 'package:device_explorer/src/common/res/audio_path.dart';
+import 'package:device_explorer/src/common/route/route_path.dart';
 import 'package:device_explorer/src/model/device_model.dart';
 import 'package:device_explorer/src/page/tab/tab_provider.dart';
 import 'package:device_explorer/src/shell/device_mtp_repository.dart';
@@ -83,5 +85,13 @@ class DeviceProvider extends BaseProvider {
     _subscription?.cancel();
     _timer?.cancel();
     super.destroy();
+  }
+
+  void onSettingPressed() {
+    context.push(RoutePath.settings);
+  }
+
+  void onAdbToolsPressed() {
+
   }
 }

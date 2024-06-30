@@ -35,4 +35,5 @@ class LangKey {
   static const newFileName = 'newFileName';
   static const confirmDelete = 'confirmDelete';
   static const showHiddenFile = 'showHiddenFile';
+  static const adbTools = 'adbTools';
 }
